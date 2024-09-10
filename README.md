@@ -7,10 +7,10 @@
 ## 09.06.2024
 
 **─**  
-Team Members and Roles:					Advisor:
+Team Members and Roles:
 
-* Josh Halprin							Dr. Peter Dobbins  
-  * Project Manager, Front End Developer		[pjd@cise.ufl.ed](mailto:pjd@cise.ufl.ed)  
+* Josh Halprin							 
+  * Project Manager, Front End Developer
   * Responsibilities: Coordinate the overall project timeline and milestones, UI/UX design, component creation, and responsive design.  
 * Bryan Smith  
   * Front End Developer, Scrum Master		  
