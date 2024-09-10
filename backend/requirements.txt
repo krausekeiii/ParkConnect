@@ -1,0 +1,4 @@
+python
+flask
+sqlalchemy
+boto3
