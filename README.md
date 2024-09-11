@@ -2,6 +2,8 @@
 
 ![][image2]
 
+*Need AWS RDS routing from .env folder to make backend operational*
+
 # **ParkConnect**
 
 ## 09.06.2024
