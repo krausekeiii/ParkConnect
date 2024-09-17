@@ -39,3 +39,9 @@ def create_app(test_config=None):
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
     return app
+
+from flask import Blueprint
+
+api_bp = Blueprint('api', __name__)
+
+from app.api import routes  # Import routes to register them with the blueprint

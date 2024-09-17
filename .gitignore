@@ -1,1 +1,4 @@
 backend/app/api/.env
+frontend/node_modules/
+**/__pycache__/
+**/*.pyc
