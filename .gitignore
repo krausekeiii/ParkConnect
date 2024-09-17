@@ -1,4 +1,6 @@
 backend/app/api/.env
 frontend/node_modules/
-**/__pycache__/
+__pycache__/
+backend/app/__pycache__/
 **/*.pyc
+.env
