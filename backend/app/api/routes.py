@@ -1,18 +1,33 @@
-from flask import jsonify, request
-from app.api import api_bp
-from app.models import User
-from app.services.user_service import get_user_by_id, create_user
+from flask import jsonify, request, Blueprint
+from  app.services import user_service
+from app.api import auth_bp
 
-@api_bp.route('/users/<int:user_id>', methods=['GET'])
-def get_user(user_id):
-    user = get_user_by_id(user_id)
-    if user:
-        return jsonify(user.to_dict()), 200
-    else:
-        return jsonify({'error': 'User not found'}), 404
+@auth_bp.route('/signup', methods=['POST'])
+def signup():
+    userName = request.json.get('userName')
+    email = request.json.get('email')
+    password = request.json.get('password')
 
-@api_bp.route('/users', methods=['POST'])
-def add_user():
-    data = request.get_json()
-    user = create_user(data)
-    return jsonify(user.to_dict()), 201
+    if not userName or not email or not password:
+        return jsonify({'error': 'Please provide a username, email, and password'}), 400
+
+    new_user = user_service.register_user(userName, email, password)
+    if 'error' in new_user:
+        return jsonify(new_user), 400
+
+    return jsonify(new_user), 201
+
+@auth_bp.route('/login', methods=['POST'])
+def login():
+    username = request.json.get('username')
+    email = request.json.get('email')   #  determine if we want to login w/ username or email or either
+    password = request.json.get('password')
+
+    if not username or not password:
+        return jsonify({'error': 'Please provide an username and password'}), 400
+
+    user = user_service.login_user(username, password)
+    if 'error' in user:
+        return jsonify(user), 400
+
+    return jsonify(user), 200

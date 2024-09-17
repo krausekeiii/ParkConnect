@@ -1,5 +1,5 @@
 from app.models.user import User
-from app.api import db
+from app import db
 
 def register_user(userName, email, password):
     existing_user = User.query.filter_by(email=email).first()
