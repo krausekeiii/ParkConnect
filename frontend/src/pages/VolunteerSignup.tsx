@@ -3,22 +3,31 @@ import './VolunteerSignup.css';
 
 const VolunteerSignup: React.FC = () => {
   return (
-    <div className="volunteer-signup">
+    <div className="signup-page">
       <h1>Volunteer Signup</h1>
-      <form>
-        <label htmlFor="name">Name:</label>
-        <input type="text" id="name" name="name" />
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" name="email" />
-        <label htmlFor="opportunity">Opportunity:</label>
-        <select id="opportunity" name="opportunity">
-          <option value="cleanup">Park Cleanup</option>
-          <option value="preservation">Historic Preservation</option>
-        </select>
+      <form className="signup-form">
+        <label>
+          Name:
+          <input type="text" name="name" required />
+        </label>
+        <label>
+          Email:
+          <input type="email" name="email" required />
+        </label>
+        <label>
+          Volunteer Opportunity:
+          <input type="text" name="opportunity" required />
+        </label>
+        <label>
+          Additional Information:
+          <textarea name="info"></textarea>
+        </label>
         <button type="submit">Sign Up</button>
       </form>
     </div>
   );
 };
+
+
 
 export default VolunteerSignup;

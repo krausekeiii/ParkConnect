@@ -1,0 +1,13 @@
+.map-container {
+    height: 200px; /* Set a fixed height */
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .map {
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden; /* Ensure no overflow from the container */
+  }
+  
