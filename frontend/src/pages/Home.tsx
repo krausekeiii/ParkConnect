@@ -1,16 +1,29 @@
 import React from 'react';
 import './Home.css';
 import volunteersImage from '../assets/volunteers-homepage.jpg';
+import { useLocation } from 'react-router-dom';
 
 const Home: React.FC = () => {
+  const location = useLocation();
+  const successMessage = location.state?.successMessage;
+
   return (
     <div className="home-page">
+      {/* Display the success message if it exists */}
+      {successMessage && (
+        <div className="success-message">
+          {successMessage}
+        </div>
+      )}
+
       <img src={volunteersImage} alt="Volunteers" className="home-image" />
       <h1 className="home-header">Discover Volunteer Opportunities in National Parks</h1>
       <div className="home-text home-section">
-      <p className="home-text">
-        <span className="bold-text">There are endless ways you can contribute to preserving and enhancing our national parks. Volunteers participate in various activities, including:</span>
-      </p>
+        <p className="home-text">
+          <span className="bold-text">
+            There are endless ways you can contribute to preserving and enhancing our national parks. Volunteers participate in various activities, including:
+          </span>
+        </p>
         <ul>
           <li>Lead or support engaging educational programs for park visitors</li>
           <li>Preserve history by maintaining trails and restoring historic sites</li>
