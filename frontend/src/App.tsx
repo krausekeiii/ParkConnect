@@ -32,7 +32,7 @@ function App() {
           <Route path="/opportunities" element={<Opportunities />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/impact" element={<ImpactTracker />} />
+          <Route path="/impact-tracker" element={<ImpactTracker />} />
           <Route path="/volunteer-signup" element={<VolunteerSignup />} />
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
           <Route 

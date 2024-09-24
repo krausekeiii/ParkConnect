@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import Map from '../components/Map';
 import Modal from '../components/Modal';
+import FilterBar from '../components/FilterBar';
 import './Opportunities.css';
 
 const Opportunities: React.FC = () => {
-  const [selectedOpportunity, setSelectedOpportunity] = useState<number | null>(null);
-
   const opportunities = [
     {
       id: 1,
@@ -24,8 +23,33 @@ const Opportunities: React.FC = () => {
       description: 'Participate in critical wildlife monitoring at Yosemite National Park. Help our rangers and scientists track the health and behavior of the park’s diverse animal population. Your contributions will play a key role in conservation efforts, and you’ll gain hands-on experience in wildlife research. Perfect for nature enthusiasts and aspiring biologists!',
     },
   ];
-  
-  
+
+  const [selectedOpportunity, setSelectedOpportunity] = useState<number | null>(null);
+  const [filteredOpportunities, setFilteredOpportunities] = useState(opportunities);
+
+  const handleFilterChange = (filters: any) => {
+    // Filter opportunities based on the selected filterType
+    let filtered = opportunities.filter(opportunity =>
+      opportunity.title.toLowerCase().includes(filters.keyword.toLowerCase())
+    );
+
+    if (filters.filterType) {
+      filtered = filtered.filter(opportunity => opportunity.title === filters.filterType);
+    }
+
+    // Add sort functionality here
+    if (filters.sortType) {
+      if (filters.sortType === 'A to Z') {
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+      } else if (filters.sortType === 'Z to A') {
+        filtered.sort((a, b) => b.title.localeCompare(a.title));
+      } else if (filters.sortType === 'Closest First') {
+        // Implement sorting logic for date and distance
+      }
+    }
+
+    setFilteredOpportunities(filtered);
+  };
 
   const handleClick = (id: number) => {
     setSelectedOpportunity(id === selectedOpportunity ? null : id);
@@ -38,17 +62,18 @@ const Opportunities: React.FC = () => {
   return (
     <div className="opportunities-page">
       <h1>Volunteer Opportunities</h1>
-      {opportunities.map((opportunity) => (
+      <FilterBar onFilterChange={handleFilterChange} />
+      {filteredOpportunities.map((opportunity) => (
         <div key={opportunity.id} className="opportunity">
           <h2 onClick={() => handleClick(opportunity.id)}>
             {opportunity.title}
           </h2>
-          <p className="park-info">
-            <strong>{opportunity.parkName}</strong>, {opportunity.state}
-          </p>
           <div className="map-container">
             <Map position={opportunity.location} />
           </div>
+          <p className="park-info">
+            <strong>{opportunity.parkName}</strong>, {opportunity.state}
+          </p>
           {selectedOpportunity === opportunity.id && (
             <Modal
               isOpen={true}
@@ -63,4 +88,3 @@ const Opportunities: React.FC = () => {
 };
 
 export default Opportunities;
-
