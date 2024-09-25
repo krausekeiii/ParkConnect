@@ -1,27 +1,33 @@
-.impact-tracker {
-    padding: 30px;
-    text-align: center;
-  }
-  
-  .impact-tracker h1 {
-    color: #3498db;
-  }
-  
-  .impact-tracker p {
-    font-size: 16px;
-  }
-  
-  .impact-tracker .tracker {
-    margin-top: 20px;
-  }
-  
-  .impact-tracker .tracker-stat {
-    display: inline-block;
-    margin: 20px;
-    padding: 20px;
-    background-color: #3498db;
-    color: white;
-    border-radius: 8px;
-    font-size: 24px;
-  }
-  
+.impact-tracker-page {
+  padding: 20px;
+  text-align: center;
+}
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.impact-tile {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.impact-tile:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.impact-tile h2 {
+  margin-bottom: 10px;
+  color: #00703c;
+}
+
+.impact-tile p {
+  font-size: 1.2rem;
+  color: #555;
+}
