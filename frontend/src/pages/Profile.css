@@ -1,0 +1,86 @@
+.profile-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #004225;
+    margin-bottom: 20px;
+  }
+  
+  .profile-section {
+    margin-bottom: 30px;
+  }
+  
+  .profile-section h2 {
+    color: #00703c;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    margin: 5px 0;
+  }
+  
+  .activity-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .activity-table th,
+  .activity-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .activity-table th {
+    background-color: #004225;
+    color: white;
+  }
+  
+  .btn {
+    background-color: #00703c;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+  
+  .btn:hover {
+    background-color: #005f2c;
+  }
+  
+  .edit-btn {
+    margin-top: 15px;
+  }
+  
+  .save-btn, .cancel-btn {
+    margin-right: 10px;
+  }
+  
+  .edit-profile-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+  }
+  
+  .form-group input {
+    padding: 8px;
+    width: 100%;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
