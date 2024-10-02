@@ -1,0 +1,27 @@
+.impact-tracker {
+    padding: 30px;
+    text-align: center;
+  }
+  
+  .impact-tracker h1 {
+    color: #3498db;
+  }
+  
+  .impact-tracker p {
+    font-size: 16px;
+  }
+  
+  .impact-tracker .tracker {
+    margin-top: 20px;
+  }
+  
+  .impact-tracker .tracker-stat {
+    display: inline-block;
+    margin: 20px;
+    padding: 20px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 8px;
+    font-size: 24px;
+  }
+  

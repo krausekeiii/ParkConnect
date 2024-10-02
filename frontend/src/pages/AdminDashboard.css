@@ -1,0 +1,25 @@
+.admin-dashboard {
+    padding: 40px;
+  }
+  
+  .admin-dashboard h1 {
+    text-align: center;
+    color: #e74c3c;
+  }
+  
+  .admin-dashboard p {
+    text-align: center;
+    font-size: 18px;
+  }
+  
+  .admin-dashboard button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
