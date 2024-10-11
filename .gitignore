@@ -1,2 +1,9 @@
+backend/app/api/.env
+frontend/node_modules/
+__pycache__/
+backend/app/__pycache__/
+**/*.pyc
+.env
 /node_modules
 /frontend/node_modules
+/frontend/package-lock.json

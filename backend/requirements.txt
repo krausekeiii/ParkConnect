@@ -2,3 +2,5 @@ python
 flask
 sqlalchemy
 boto3
+flask-sqlalchemy
+dotenv
