@@ -3,6 +3,7 @@ import Map from '../components/Map';
 import Modal from '../components/Modal';
 import FilterBar from '../components/FilterBar';
 import './Opportunities.css';
+import { getOpportunities } from '../services/api';
 
 const Opportunities: React.FC = () => {
   const opportunities = [

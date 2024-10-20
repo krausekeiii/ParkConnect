@@ -9,9 +9,16 @@ const Login: React.FC<{ setIsAuthenticated: (value: boolean) => void }> = ({ set
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Perform login logic here
-    setIsAuthenticated(true); 
-    navigate('/'); 
+
+    // Hardcode admin credentials for now
+    if (email === 'admin@parkconnect.com' && password === 'admin123') {
+      setIsAuthenticated(true);
+      navigate('/admin-dashboard'); // Redirect to Admin Dashboard
+    } else {
+      // Regular user login or error handling can go here
+      setIsAuthenticated(true);
+      navigate('/');
+    }
   };
 
   return (
