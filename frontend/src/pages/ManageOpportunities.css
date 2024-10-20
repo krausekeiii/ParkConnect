@@ -1,0 +1,48 @@
+.manage-opportunities {
+    padding: 20px;
+  }
+  
+  .add-btn {
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #00703c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-btn:hover {
+    background-color: #005f2c;
+  }
+  
+  .opportunity-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .opportunity-table th,
+  .opportunity-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  .opportunity-table th {
+    background-color: #f4f4f4;
+  }
+  
+  button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    background-color: #00703c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #005f2c;
+  }
+  

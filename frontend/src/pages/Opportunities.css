@@ -2,56 +2,49 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-  }
+}
   
-  .opportunity {
+.opportunity {
     margin-bottom: 40px;
     border-bottom: 1px solid #ddd;
     padding-bottom: 20px;
-  }
+}
   
-  .opportunity h2 {
+.opportunity h2 {
     cursor: pointer;
     color: #00703c;
-  }
+    text-align: center;
+}
 
-  .opportunity h2:hover {
+.opportunity h2:hover {
     text-decoration: underline;
-  }
+}
   
-  .opportunity h2 a {
-    text-decoration: none;
-    color: inherit;
-  }
-  
-  .opportunity h2 a:hover {
-    color: #005f2c;
-  }
-  
-  .map-container {
-    width: 80%;
+.map-container {
+    width: 100%;
     height: 300px;
-    margin: 0 auto;
-  }
+    margin: 20px auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
   
-  .map-container .leaflet-container {
+.map-container .leaflet-container {
     width: 100%;
     height: 100%;
-  }
+}
   
-  .description {
+.park-info {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    color: #000;
+    font-weight: bold;
+}
+  
+.description {
     margin-top: 15px;
     font-size: 1rem;
     color: #555;
     line-height: 1.5;
-  }
-
-  .park-info {
-    font-size: 1.1rem;
-    margin-top: 5px;
-    color: #000;
-  }
-  
-  .park-info span {
-    color: #333;
-  }
+}

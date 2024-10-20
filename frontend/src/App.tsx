@@ -9,6 +9,10 @@ import VolunteerSignup from './pages/VolunteerSignup';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Header from './components/Header';
+import ManageUsers from './pages/ManageUsers';
+import ManageOpportunities from './pages/ManageOpportunities';
+import VolunteerStats from './pages/VolunteerStats';
+import SendNotifications from './pages/SendNotifications';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Auth state
@@ -31,14 +35,18 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/opportunities" element={<Opportunities />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/impact" element={<ImpactTracker />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/impact-tracker" element={<ImpactTracker />} />
           <Route path="/volunteer-signup" element={<VolunteerSignup />} />
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
           <Route 
             path="/signup" 
             element={<Signup setIsAuthenticated={setIsAuthenticated} setUserName={setUserName} />} // Pass setUserName to Signup
           />
+          <Route path="/manage-users" element={<ManageUsers />} /> {/* New routes */}
+          <Route path="/manage-opportunities" element={<ManageOpportunities />} />
+          <Route path="/volunteer-stats" element={<VolunteerStats />} />
+          <Route path="/send-notifications" element={<SendNotifications />} />
         </Routes>
       </div>
     </Router>
