@@ -1,9 +1,6 @@
-# defines api endpoints for user sign-up and login
-
-from flask import request, jsonify, Blueprint
-from app.services import user_service
-
-auth_bp = Blueprint('auth', __name__)
+from flask import jsonify, request, Blueprint
+from  app.services import user_service
+from app.api import auth_bp
 
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
