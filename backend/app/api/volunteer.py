@@ -8,7 +8,7 @@ def volunteer_signup():
     opp_ID = request.json.get('opp_ID')
 
     if not email or not opp_ID:
-        return jsonify({'error': 'Please provide an email and opportunity ID'}), 500
+        return jsonify({'error': 'Please provide an email and opportunity ID'}), 400
 
     new_vol = user_service.register_volunteer(email, opp_ID)
     if 'error' in new_vol:

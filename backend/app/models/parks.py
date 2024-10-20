@@ -18,3 +18,18 @@ class Park(db.Model):
     #used for debugging label to decrease ambiguity
     def __repr__(self):
         return '<Park %r>' % self.name
+    
+
+'''
+CREATE TABLE parks.parks (
+    park_ID SERIAL PRIMARY KEY,
+    name VARCHAR(80) NOT NULL,
+    state CHAR(2) NOT NULL,
+    address VARCHAR(80) NOT NULL,
+    phone_number CHAR(10) NOT NULL,
+    email VARCHAR(120) NOT NULL,
+    hours VARCHAR(80),
+    description VARCHAR(200),
+    url VARCHAR(120)
+);
+'''
