@@ -35,6 +35,10 @@ const Home: React.FC = () => {
           <li>Educate travelers on natural and cultural heritage</li>
         </ul>
       </div>
+
+      {/* Divider line */}
+      <div className="divider"></div>
+
       <h2 className="home-header">Join Our Mission</h2>
       <p className="home-text">
         Become part of the National Park Service's volunteer community, whether for a day or a year. Help protect America's treasured sites.

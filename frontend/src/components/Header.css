@@ -1,9 +1,10 @@
 .navbar {
   display: flex;
-  justify-content: space-between; 
-  align-items: center; 
+  justify-content: space-between;
+  align-items: center;
   background-color: #004225;
   padding: 10px;
+  flex-wrap: wrap;
 }
 
 .nav-left a {
@@ -15,8 +16,7 @@
 
 .nav-right {
   display: flex;
-  align-items: center; 
-  
+  align-items: center;
 }
 
 .nav-right .btn {
@@ -44,5 +44,48 @@
   color: white;
   font-size: 1.25rem;
   margin-right: 15px;
-  white-space: nowrap; 
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-left, .nav-right {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .nav-left {
+    flex-wrap: wrap;
+  }
+
+  .nav-left a {
+    margin: 5px 10px;
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+
+  .nav-right {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-right .btn {
+    margin: 10px 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .welcome-message {
+    margin-right: 0;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 1rem;
+  }
 }
