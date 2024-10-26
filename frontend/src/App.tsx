@@ -15,12 +15,14 @@ import VolunteerStats from './pages/VolunteerStats';
 import SendNotifications from './pages/SendNotifications';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Auth state
-  const [userName, setUserName] = useState(''); // Store user's name
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    setUserName(''); // Clear username on logout
+    setUserName('');
+    setUserRole('');
   };
 
   return (
@@ -28,7 +30,8 @@ function App() {
       <Header 
         isAuthenticated={isAuthenticated} 
         handleLogout={handleLogout} 
-        userName={userName} // Pass userName to Header
+        userName={userName} 
+        userRole={userRole} 
       />
       <div className="container">
         <Routes>
@@ -38,12 +41,15 @@ function App() {
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/impact-tracker" element={<ImpactTracker />} />
           <Route path="/volunteer-signup" element={<VolunteerSignup />} />
-          <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+          <Route 
+            path="/login" 
+            element={<Login setIsAuthenticated={setIsAuthenticated} setUserName={setUserName} setUserRole={setUserRole} />} 
+          />
           <Route 
             path="/signup" 
-            element={<Signup setIsAuthenticated={setIsAuthenticated} setUserName={setUserName} />} // Pass setUserName to Signup
+            element={<Signup setIsAuthenticated={setIsAuthenticated} setUserName={setUserName} />} 
           />
-          <Route path="/manage-users" element={<ManageUsers />} /> {/* New routes */}
+          <Route path="/manage-users" element={<ManageUsers />} />
           <Route path="/manage-opportunities" element={<ManageOpportunities />} />
           <Route path="/volunteer-stats" element={<VolunteerStats />} />
           <Route path="/send-notifications" element={<SendNotifications />} />

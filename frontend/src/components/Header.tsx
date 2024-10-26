@@ -1,21 +1,25 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Header.css'; // Import Header CSS
+import './Header.css';
 
-const Header: React.FC<{ isAuthenticated: boolean, handleLogout: () => void, userName: string }> = ({ isAuthenticated, handleLogout, userName }) => {
+interface HeaderProps {
+  isAuthenticated: boolean;
+  handleLogout: () => void;
+  userName: string;
+  userRole: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ isAuthenticated, handleLogout, userName, userRole }) => {
   const navigate = useNavigate();
 
-  const handleProfile = () => {
-    navigate('/profile');
+  const handleLogoutClick = () => {
+    handleLogout();
+    navigate('/'); // Redirect to Home after logout
   };
 
-  const handleLoginNav = () => {
-    navigate('/login');
-  };
-
-  const handleSignupNav = () => {
-    navigate('/signup');
-  };
+  const handleProfile = () => navigate('/profile');
+  const handleLoginNav = () => navigate('/login');
+  const handleSignupNav = () => navigate('/signup');
 
   return (
     <header>
@@ -25,13 +29,16 @@ const Header: React.FC<{ isAuthenticated: boolean, handleLogout: () => void, use
           <Link to="/opportunities">Opportunities</Link>
           <Link to="/volunteer-signup">Volunteer Signup</Link>
           <Link to="/impact-tracker">Impact Tracker</Link>
+          {isAuthenticated && userRole === 'admin' && (
+            <Link to="/admin-dashboard" className="btn admin-btn">Admin Dashboard</Link>
+          )}
         </div>
         <div className="nav-right">
           {isAuthenticated ? (
             <>
               <span className="welcome-message">Welcome, {userName}</span>
               <button onClick={handleProfile} className="btn profile-btn">Profile</button>
-              <button onClick={handleLogout} className="btn logout-btn">Logout</button>
+              <button onClick={handleLogoutClick} className="btn logout-btn">Logout</button>
             </>
           ) : (
             <>

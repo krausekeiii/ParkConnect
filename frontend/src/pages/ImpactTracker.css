@@ -1,6 +1,20 @@
+:root {
+  --nps-brown: #8B4513;
+  --nps-green: #004624;
+  --nps-sage: #87A878;
+  --nps-tan: #DCD0C0;
+  --nps-cream: #F4F1EA;
+  --nps-stone: #4A4A4A;
+}
+
 .impact-tracker-page {
   padding: 20px;
   text-align: center;
+  background-color: var(--nps-cream);
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .impact-grid {
@@ -10,7 +24,7 @@
 }
 
 .impact-tile {
-  background-color: #f5f5f5;
+  background-color: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -24,10 +38,25 @@
 
 .impact-tile h2 {
   margin-bottom: 10px;
-  color: #00703c;
+  color: var(--nps-green);
 }
 
 .impact-tile p {
   font-size: 1.2rem;
-  color: #555;
+  color: var(--nps-stone);
+}
+
+@media (max-width: 768px) {
+  .impact-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+  }
+
+  .impact-tile {
+    padding: 15px;
+  }
+
+  .impact-tile p {
+    font-size: 1rem;
+  }
 }
