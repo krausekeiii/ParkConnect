@@ -1,17 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.css'; // Import Login CSS
+import './Login.css';
 
-const Login: React.FC<{ setIsAuthenticated: (value: boolean) => void }> = ({ setIsAuthenticated }) => {
+const Login: React.FC<{ setIsAuthenticated: (value: boolean) => void; setUserName: (name: string) => void; setUserRole: (role: string) => void }> = ({ setIsAuthenticated, setUserName, setUserRole }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Perform login logic here
-    setIsAuthenticated(true); 
-    navigate('/'); 
+
+    if (email === 'admin@parkconnect.com' && password === 'admin123') {
+      setIsAuthenticated(true);
+      setUserName('Admin');
+      setUserRole('admin');
+      navigate('/admin-dashboard');
+    } else {
+      setIsAuthenticated(true);
+      setUserName('User');
+      setUserRole('user');
+      navigate('/');
+    }
   };
 
   return (

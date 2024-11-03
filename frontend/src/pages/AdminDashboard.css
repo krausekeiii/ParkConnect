@@ -1,25 +1,77 @@
+:root {
+  --primary-color: #e74c3c;
+  --secondary-color: #c0392b;
+  --background-color: #f9f9f9;
+  --button-bg: #e74c3c;
+  --button-hover-bg: #c0392b;
+  --text-color: #333;
+  --border-radius: 8px;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
 .admin-dashboard {
-    padding: 40px;
+  padding: 40px;
+  background-color: var(--background-color);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 10px var(--shadow-color);
+  text-align: center;
+}
+
+.admin-dashboard h1 {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.admin-dashboard p {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  margin-bottom: 40px;
+}
+
+.admin-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.admin-controls button {
+  padding: 15px 30px;
+  background-color: var(--button-bg);
+  color: #fff;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 3px 8px var(--shadow-color);
+  text-transform: uppercase;
+}
+
+.admin-controls button:hover {
+  background-color: var(--button-hover-bg);
+  transform: translateY(-3px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 20px;
   }
-  
+
   .admin-dashboard h1 {
-    text-align: center;
-    color: #e74c3c;
+    font-size: 1.5rem;
   }
-  
-  .admin-dashboard p {
-    text-align: center;
-    font-size: 18px;
+
+  .admin-controls {
+    flex-direction: column;
+    gap: 15px;
   }
-  
-  .admin-dashboard button {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+
+  .admin-controls button {
+    width: 100%;
+    padding: 15px;
   }
-  
+}

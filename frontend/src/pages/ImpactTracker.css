@@ -1,27 +1,62 @@
-.impact-tracker {
-    padding: 30px;
-    text-align: center;
+:root {
+  --nps-brown: #8B4513;
+  --nps-green: #004624;
+  --nps-sage: #87A878;
+  --nps-tan: #DCD0C0;
+  --nps-cream: #F4F1EA;
+  --nps-stone: #4A4A4A;
+}
+
+.impact-tracker-page {
+  padding: 20px;
+  text-align: center;
+  background-color: var(--nps-cream);
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.impact-tile {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.impact-tile:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.impact-tile h2 {
+  margin-bottom: 10px;
+  color: var(--nps-green);
+}
+
+.impact-tile p {
+  font-size: 1.2rem;
+  color: var(--nps-stone);
+}
+
+@media (max-width: 768px) {
+  .impact-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
   }
-  
-  .impact-tracker h1 {
-    color: #3498db;
+
+  .impact-tile {
+    padding: 15px;
   }
-  
-  .impact-tracker p {
-    font-size: 16px;
+
+  .impact-tile p {
+    font-size: 1rem;
   }
-  
-  .impact-tracker .tracker {
-    margin-top: 20px;
-  }
-  
-  .impact-tracker .tracker-stat {
-    display: inline-block;
-    margin: 20px;
-    padding: 20px;
-    background-color: #3498db;
-    color: white;
-    border-radius: 8px;
-    font-size: 24px;
-  }
-  
+}

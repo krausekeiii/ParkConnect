@@ -1,0 +1,155 @@
+.manage-opportunities {
+  padding: 20px;
+}
+
+.add-btn {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #00703c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background-color: #005f2c;
+}
+
+.opportunity-table-wrapper {
+  overflow-x: auto;
+}
+
+.opportunity-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.opportunity-table th,
+.opportunity-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.opportunity-table th {
+  background-color: #87A878;
+  color: white;
+}
+
+.opportunity-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.opportunity-table tr:hover {
+  background-color: #c8e3d4;
+}
+
+button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  background-color: #00703c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #005f2c;
+}
+
+/* Modal styling */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 500px;
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-content h2 {
+  text-align: center;
+  color: #00703c;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.modal-content label {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  color: #555;
+  font-weight: bold;
+  text-align: left;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.modal-content .submit-btn, .modal-content .cancel-btn {
+  width: 48%;
+  padding: 10px;
+  margin: 15px 1%;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.modal-content .submit-btn {
+  background-color: #00703c;
+  color: white;
+}
+
+.modal-content .cancel-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .manage-opportunities {
+    padding: 15px;
+  }
+
+  .add-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+  }
+
+  .opportunity-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .opportunity-table th,
+  .opportunity-table td {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  button {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
