@@ -1,5 +1,4 @@
 # This file creates a Flask instance and sets up the configuration that will be used by the application. 
-# It also creates the instance folder where the SQLite database file will be stored. This will be temporary once we establish an AWS RDS instance.
 
 import os
 from flask import Flask
@@ -19,7 +18,13 @@ def create_app(config_class=Config):
     
     db.init_app(app)
     
-    from app.api.routes import auth_bp
+    from app.api.auth import auth_bp
+    from app.api.volunteer import vol_bp
+    from app.api.opps import opp_bp
+    
     app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(vol_bp, url_prefix='/vol')
+    app.register_blueprint(opp_bp, url_prefix='/opp')
+    #app.register_blueprint(user_bp, url_prefix='/user')
 
     return app
