@@ -3,4 +3,4 @@ flask
 sqlalchemy
 boto3
 flask-sqlalchemy
-dotenv
+conda-forge::python-dotenv
