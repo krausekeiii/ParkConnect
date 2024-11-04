@@ -14,4 +14,7 @@ def volunteer_signup():
     if 'error' in new_vol:
         return jsonify(new_vol), 400
 
-    return jsonify(new_vol), 201
+    return new_vol
+
+#@vol_bp.route('/unregister', methods=['POST'])
+#def 
