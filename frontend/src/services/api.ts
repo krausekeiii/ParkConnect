@@ -1,11 +1,9 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000'; // Replace with your Flask backend URL
-
 // Sign up new user
 export const signupUser = async (userName: string, email: string, password: string) => {
   try {
-    const response = await axios.post(`${API_URL}/signup`, {
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/signup`, {
       userName,
       email,
       password,
@@ -19,7 +17,7 @@ export const signupUser = async (userName: string, email: string, password: stri
 // Log in user
 export const loginUser = async (username: string, password: string) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, {
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
       username,
       password,
     });
@@ -84,4 +82,3 @@ export const signupVolunteer = async (name: string, email: string, interest: str
     }, 500); // Simulate network delay
   });
 };
-
