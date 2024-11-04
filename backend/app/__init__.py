@@ -4,13 +4,15 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
+from flask_cors import CORS
 
 db = SQLAlchemy()
 
 def create_app(config_class=Config):
     app = Flask(__name__)#, instance_relative_config=True)
     app.config.from_object(config_class)
-
+    CORS(app)
+    
     try:
         os.makedirs(app.instance_path)
     except OSError:

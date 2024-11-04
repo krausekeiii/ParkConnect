@@ -16,5 +16,16 @@ def volunteer_signup():
 
     return new_vol
 
-#@vol_bp.route('/unregister', methods=['POST'])
-#def 
+@vol_bp.route('/unregister', methods=['POST'])
+def unreg_vol():
+    email = request.json.get('email')
+    opp_ID = request.json.get('opp_ID')
+
+    if not email or not opp_ID:
+        return jsonify({'error': 'Please provide an email and opportunity ID'}), 400
+
+    unreg_vol = user_service.unregister_vol(email, opp_ID)
+    if 'error' in unreg_vol:
+        return jsonify(unreg_vol), 400
+
+    return unreg_vol
