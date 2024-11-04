@@ -19,18 +19,18 @@ def signup():
     if 'error' in new_user:
         return jsonify(new_user), 400
 
-    return jsonify(new_user), 201
+    return new_user
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    username = request.json.get('username')
-    #email = request.json.get('email')   #  determine if we want to login w/ username or email or either
+    #username = request.json.get('username')
+    email = request.json.get('email')   #  determine if we want to login w/ username or email or either
     password = request.json.get('password')
 
-    if not username or not password:
+    if not email or not password:
         return jsonify({'error': 'Please provide an username and password'}), 400
 
-    user = user_service.login_user(username, password)
+    user = user_service.login_user(email, password)
     
     if 'error' in user:
         return jsonify(user), 401

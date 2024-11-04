@@ -4,3 +4,4 @@ sqlalchemy
 boto3
 flask-sqlalchemy
 conda-forge::python-dotenv
+psycopg2

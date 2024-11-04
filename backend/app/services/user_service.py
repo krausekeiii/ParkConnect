@@ -2,6 +2,7 @@ from app.models.user import User
 from app.models.vols import Volunteer
 from app.models.opportunity import Opportunity
 from app import db
+from flask import jsonify
 
 def register_user(userName, email, password, name, description):
     existing_user = db.session.query(User).filter_by(email=email).first()
@@ -12,7 +13,16 @@ def register_user(userName, email, password, name, description):
     db.session.add(new_user)
     try:
         db.session.commit()
-        return new_user
+        # Convert the User object to a JSON-serializable dictionary
+        user_data = {
+            'username': new_user.username,
+            'email': new_user.email,
+            'name': new_user.name,
+            'description': new_user.description,
+            'hours': new_user.hours,
+            'vol_count': new_user.vol_count
+        }
+        return jsonify(user_data), 201
     except Exception as e :
         db.session.rollback()
         return {'error': f'Failed to create user: {str(e)}'}
@@ -41,10 +51,10 @@ def edit_name(email, name):
         db.session.rollback()
         return {'error': f'Failed to add name: {str(e)}'}
 
-def login_user(userName, password):
-    user = db.session.query(User).filter_by(userName=userName).first()
+def login_user(email, password):
+    user = db.session.query(User).filter_by(email=email).first()
     if not user or user.password != password:
-        return {'error': 'Invalid username or password'}
+        return {'error': 'Invalid email or password'}
     return user
 
 def register_volunteer(email, opp_ID):
