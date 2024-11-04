@@ -34,4 +34,4 @@ def login():
     
     if 'error' in user:
         return jsonify(user), 401
-    return jsonify(user), 200
+    return user

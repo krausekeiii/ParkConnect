@@ -46,7 +46,12 @@ def edit_name(email, name):
     user.name = name
     try:
         db.session.commit()
-        return user
+        user_data = {
+            'username': user.username,
+            'email': user.email,
+            'name': user.name,
+        }
+        return jsonify(user_data), 201
     except Exception as e:
         db.session.rollback()
         return {'error': f'Failed to add name: {str(e)}'}
@@ -55,7 +60,15 @@ def login_user(email, password):
     user = db.session.query(User).filter_by(email=email).first()
     if not user or user.password != password:
         return {'error': 'Invalid email or password'}
-    return user
+    user_data = {
+            'username': user.username,
+            'email': user.email,
+            'name': user.name,
+            'description': user.description,
+            'hours': user.hours,
+            'vol_count': user.vol_count
+    }
+    return jsonify(user_data), 201
 
 def register_volunteer(email, opp_ID):
     existing_user = db.session.query(User).filter_by(email=email).first()
@@ -85,9 +98,47 @@ def register_volunteer(email, opp_ID):
     existing_user.hours += hours
 
     try:
-        # Commit all changes in one go
         db.session.commit()
-        return new_vol
+        user_data = {
+            'email': new_vol.email,
+            'opportunity_ID': new_vol.opportunity_ID
+        }
+        return jsonify(user_data), 201
     except Exception as e:
         db.session.rollback()
         return {'error': f'Failed to register volunteer: {str(e)}'}
+    
+def unregister_vol(email, opp_ID):
+    # Check if user exists
+    existing_user = db.session.query(User).filter_by(email=email).first()
+    if not existing_user:
+        return {'error': 'User with that email does not exist'}
+
+    # Check if volunteer is registered for this opportunity
+    existing_vol = db.session.query(Volunteer).filter_by(email=email, opportunity_ID=opp_ID).first()
+    if not existing_vol:
+        return {'error': 'User is not registered as a volunteer for this event'}
+
+    # Update opportunity volunteer count
+    opp = db.session.query(Opportunity).filter_by(opportunity_ID=opp_ID).first()
+    if opp.num_volunteers > 0:
+        opp.num_volunteers -= 1
+        opp.num_volunteers_needed += 1
+
+    # Remove volunteer entry
+    db.session.delete(existing_vol)
+
+    # Update user volunteer count and hours
+    if existing_user.vol_count > 0:
+        existing_user.vol_count -= 1
+    
+    # Subtract the hours for this opportunity from the user's total hours
+    hours = opp.hours_req
+    existing_user.hours = max(existing_user.hours - hours, 0)  # Ensures hours don’t go below zero
+
+    try:
+        db.session.commit()
+        return {'message': 'Volunteer unregistered successfully'}, 200
+    except Exception as e:
+        db.session.rollback()
+        return {'error': f'Failed to unregister volunteer: {str(e)}'}    
