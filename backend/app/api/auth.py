@@ -6,7 +6,7 @@ from app.api import auth_bp
 
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
-    userName = request.json.get('username')
+    userName = request.json.get('userName')
     email = request.json.get('email')
     password = request.json.get('password')
     description = request.json.get('description')
@@ -23,7 +23,7 @@ def signup():
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    #username = request.json.get('username')
+    #username = request.json.get('userName')
     email = request.json.get('email')   #  determine if we want to login w/ username or email or either
     password = request.json.get('password')
 
