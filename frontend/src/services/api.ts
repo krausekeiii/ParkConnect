@@ -3,8 +3,8 @@ import axios from 'axios';
 // Sign up new user
 export const signupUser = async (userName: string, email: string, password: string) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/signup`, {
-      userName,
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/signup`, {
+      username: userName,
       email,
       password,
     });
@@ -15,10 +15,10 @@ export const signupUser = async (userName: string, email: string, password: stri
 };
 
 // Log in user
-export const loginUser = async (username: string, password: string) => {
+export const loginUser = async (email: string, password: string) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-      username,
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, {
+      email,
       password,
     });
     return response.data;
