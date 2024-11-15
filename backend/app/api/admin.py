@@ -15,7 +15,7 @@ def add_admin():
     result = admin_service.add_admin(new_admin, admin, parkID)
     if 'error' in result:
         return jsonify(result), 500
-    return jsonify('Success'), 200
+    return jsonify(result), 200
 
 # json request: POST, oldAdmin = email of user to remove admin permissions, admin = email of current user
 @admin_bp.route('/remove', methods=['POST'])
@@ -29,10 +29,10 @@ def remove_admin():
     result = admin_service.remove_admin(old_admin, admin, parkID)
     if 'error' in result:
         return jsonify(result), 500
-    return jsonify('Success'), 200
+    return jsonify(result), 200
 
 # json request: GET, parkID = park id
-@admin_bp.route('/stats/<parkID>', methods=['GET'])
+@admin_bp.route('/stats/<int:parkID>', methods=['GET'])
 def get_stats(parkID):
     if not parkID:
         return jsonify({'error': 'Please provide a park ID'}), 400
@@ -45,11 +45,9 @@ def get_stats(parkID):
         return jsonify(users), 500
     if 'error' in opps:
         return jsonify(opps), 500
-    if 'error' in hours:
+    if type(hours) not in [int]:
         return jsonify(hours), 500
     
-    users = [{'email': user[0], 'hours': user[1]} for user in users]
-    opps = [{'name': opp[0], 'volunteers': opp[1]} for opp in opps]
     result = {
         'top3Users': users,
         'top3Opportunities': opps,

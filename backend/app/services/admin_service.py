@@ -1,6 +1,12 @@
 from app.models import User, Opportunity, Volunteer, Admin
 from app import db
 
+def jsonadmin(admin):
+    return {
+        'email': admin.email,
+        'parkID': admin.parkID
+    }
+
 def isAdmin(email, parkID):
     user = Admin.query.filter_by(email=email, parkID=parkID).first()
     if user:
@@ -22,7 +28,7 @@ def add_admin(new, curr, parkID):
         db.session.rollback()
         return {'error': f'Failed to add admin to admin table: {str(e)}'}
     
-    return new_admin
+    return jsonadmin(new_admin)
 
 def remove_admin(old, curr, parkID):
     old_admin = User.query.filter_by(email=old).first()
@@ -38,22 +44,43 @@ def remove_admin(old, curr, parkID):
         db.session.rollback()
         return {'error': f'Failed to remove admin from admin table: {str(e)}'}
     
-    return old_admin
+    return jsonadmin(old_admin)
 
 def get_top3_users(parkID):
     # cross query vols to find opportunity id, getting only opportunities belonging to parkID
     # then group by user email and sum hours
     # finally order by sum of hours and limit to 3
-    top3 = db.session.query(Volunteer.email, db.func.sum(Opportunity.hours_req)).join(Opportunity).filter(Opportunity.park_ID == parkID).group_by(Volunteer.email).order_by(db.func.sum(Opportunity.hours_req).desc()).limit(3).all()
-    return top3
+    try:
+        top3 = db.session.query(
+            Volunteer.email, db.func.sum(Opportunity.hours_req)
+        ).select_from(Volunteer).join(
+            Opportunity, Volunteer.opportunity_id == Opportunity.opportunity_id
+        ).filter(
+            Opportunity.park_id == parkID
+        ).group_by(
+            Volunteer.email
+        ).order_by(
+            db.func.sum(Opportunity.hours_req).desc()
+        ).limit(3).all()
+        users = [{'email': user[0], 'hours': user[1]} for user in top3]
+        return users
+    except Exception as e:
+        return {'error': f'Failed to get top 3 users: {str(e)}'}
 
 def get_top_opportunites(parkID):
     # get top 3 opportunities by number of volunteers
-    top3 = db.session.query(Opportunity.name, Opportunity.num_volunteers).filter(Opportunity.park_ID == parkID).order_by(Opportunity.num_volunteers.desc()).limit(3).all()
-    return top3
+    try:
+        top3 = db.session.query(Opportunity.name, Opportunity.num_volunteers).filter(Opportunity.park_id == parkID).order_by(Opportunity.num_volunteers.desc()).limit(3).all()
+        opps = [{'name': opp[0], 'volunteers': opp[1]} for opp in top3]
+        return opps
+    except Exception as e:
+        return {'error': f'Failed to get top 3 opportunities: {str(e)}'}
 
 def get_total_hours(parkID):
     # get total hours that users have volunteered at a parkID
-    hours_vold = db.session.query(db.func.sum(Opportunity.hours_req * Opportunity.num_volunteers)).filter(Opportunity.park_ID == parkID).scalar()
-    return hours_vold
+    try:
+        hours_vold = db.session.query(db.func.sum(Opportunity.hours_req * Opportunity.num_volunteers)).filter(Opportunity.park_id == parkID).scalar()
+        return hours_vold
+    except Exception as e:
+        return {'error': f'Failed to get total hours: {str(e)}'}
 

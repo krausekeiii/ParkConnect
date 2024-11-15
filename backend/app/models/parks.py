@@ -9,9 +9,7 @@ class Park(db.Model):
     state = db.Column(db.String(2), nullable=False)
     address = db.Column(db.String(80), nullable=False)
     phone_number = db.Column(db.String(10), nullable=False)
-    email = db.Column(db.String(120), nullable=False)
     hours = db.Column(db.String(80), nullable=False)
-    description = db.Column(db.String(200))
     url = db.Column(db.String(120))
     # may add more as needed
 

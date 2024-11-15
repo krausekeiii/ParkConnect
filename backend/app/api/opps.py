@@ -2,6 +2,7 @@ from app.api import opp_bp
 from flask import request, jsonify
 from app.services import opp_service
 
+
 @opp_bp.route('/create', methods=['POST'])
 def create_opp():
     name = request.json.get('name')
@@ -21,3 +22,22 @@ def create_opp():
         return jsonify(new_opp), 400
     
     return jsonify(new_opp), 200
+
+@opp_bp.route('/get/<int:oppID>', methods=['GET'])
+def get_opp(oppID):
+    if not oppID:
+        return jsonify({'error': 'Please provide an opportunity ID'}), 400
+    
+    opp = opp_service.get_opp(oppID)
+    if 'error' in opp:
+        return jsonify(opp), 400
+    
+    return jsonify(opp), 200
+
+@opp_bp.route('/getall', methods=['GET'])
+def get_all_opps():
+    opps = opp_service.get_all_opps()
+    if 'error' in opps:
+        return jsonify(opps), 400
+    
+    return jsonify(opps), 200
