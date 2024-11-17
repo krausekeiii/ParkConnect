@@ -11,3 +11,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: visible !important;
+  overflow-y: auto; /* Enables vertical scrolling */
+  scroll-behavior: smooth; /* Optional: Smooth scrolling for a better experience */
+}
+
+body {
+  background-color: var(--nps-cream, #F4F1EA); /* Optional: Matches your theme */
+  color: var(--nps-stone, #4A4A4A); /* Optional: Matches your text color */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}

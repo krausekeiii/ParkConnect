@@ -58,18 +58,18 @@ def edit_name(email, name):
         return {'error': f'Failed to add name: {str(e)}'}
 
 def login_user(email, password):
+    # Query the database for the user by email
     user = db.session.query(User).filter_by(email=email).first()
-    if not user or user.password != password:
-        return {'error': 'Invalid email or password'}
-    user_data = {
-            'username': user.username,
-            'email': user.email,
-            'name': user.name,
-            'description': user.description,
-            'hours': user.hours,
-            'vol_count': user.vol_count
-    }
-    return jsonify(user_data), 201
+
+    # Check if user exists
+    if not user:
+        return None  # Return None if the user does not exist
+
+    # Compare the plaintext passwords (avoid this in production)
+    if user.password != password:
+        return None  # Return None if the password does not match
+
+    return user  # Return the user object if the credentials are valid
 
 def register_volunteer(email, opp_ID):
     existing_user = db.session.query(User).filter_by(email=email).first()

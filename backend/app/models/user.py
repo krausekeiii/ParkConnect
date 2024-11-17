@@ -13,6 +13,7 @@ class User(db.Model):
     description = db.Column(db.String(200))
     hours = db.Column(db.Float, nullable=False)
     vol_count = db.Column(db.Integer, nullable=False)
+    role = db.Column(db.String(20), nullable=False, default='user')  # Add the role column
     # may add more as needed
 
     #used for debugging label to decrease ambiguity
