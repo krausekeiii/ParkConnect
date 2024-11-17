@@ -1,6 +1,7 @@
 from app.models.user import User
 from app.models.vols import Volunteer
 from app.models.opportunity import Opportunity
+from app.models.parks import Park
 from app import db
 from flask import jsonify
 
@@ -142,3 +143,27 @@ def unregister_vol(email, opp_ID):
     except Exception as e:
         db.session.rollback()
         return {'error': f'Failed to unregister volunteer: {str(e)}'}    
+    
+def get_hours_vold(userEmail):
+    user = db.session.query(User).filter_by(email=userEmail).first()
+    if not user:
+        return {'error': 'User with that email does not exist'}
+    return user.hours
+
+def get_vol_count(userEmail):
+    user = db.session.query(User).filter_by(email=userEmail).first()
+    if not user:
+        return {'error': 'User with that email does not exist'}
+    return user.vol_count
+
+def get_top_parks(userEmail):
+    # Join Volunteer, Opportunity, and Park on park_ID, sum hours volunteered, group by park name
+    query = db.session.query(Park.name, db.func.sum(Opportunity.hours_req).label('total_hours'))\
+        .join(Volunteer, Volunteer.opportunity_ID == Opportunity.opportunity_ID)\
+        .join(Park, Park.park_ID == Opportunity.park_ID)\
+        .filter(Volunteer.email == userEmail)\
+        .group_by(Park.name)\
+        .order_by(db.func.sum(Opportunity.hours_req).desc())\
+        .limit(3)
+    
+    return query.all()
