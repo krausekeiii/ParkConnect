@@ -12,7 +12,7 @@ const Login: React.FC<{ setIsAuthenticated: (value: boolean) => void; setUserNam
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
+  
     try {
       const response = await loginUser(email, password);
       if (response.error) {
@@ -20,8 +20,8 @@ const Login: React.FC<{ setIsAuthenticated: (value: boolean) => void; setUserNam
       } else {
         setIsAuthenticated(true);
         setUserName(response.name); // Set the userName from the response
-        setUserRole(response.role);
-        navigate(response.role === 'admin' ? '/admin-dashboard' : '/');
+        setUserRole(response.role); // Set the user role
+        navigate(response.role === 'admin' ? '/admin-dashboard' : '/'); // Redirect based on role
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again later.');

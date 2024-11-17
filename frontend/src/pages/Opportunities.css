@@ -8,14 +8,16 @@
   }
   
   .opportunities-page {
+    overflow-y: auto;
+    min-height: auto; /* Adjust height dynamically based on content */
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     background-color: var(--nps-cream);
-    min-height: 100vh;
     width: 100%;
     box-sizing: border-box;
   }
+  
   
   .opportunity {
     margin-bottom: 40px;
