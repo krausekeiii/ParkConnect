@@ -30,8 +30,12 @@ def login():
     if not email or not password:
         return jsonify({'error': 'Please provide an email and password'}), 400
 
+    # Fetch the user object
     user = user_service.login_user(email, password)
-    
-    if 'error' in user:
-        return jsonify(user), 401
-    return jsonify(user), 200
+
+    # Check if the user exists and credentials are valid
+    if not user:
+        return jsonify({'error': 'Invalid email or password'}), 401
+
+    # Return user info
+    return jsonify({'name': user.name, 'role': user.role}), 200

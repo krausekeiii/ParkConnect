@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ManageOpportunities.css';
+import { getOpportunities, addOpportunity, deleteOpportunity } from '../services/api';
 
 interface Opportunity {
   id: number;
@@ -11,28 +12,10 @@ interface Opportunity {
 }
 
 const ManageOpportunities: React.FC = () => {
-  const [opportunities, setOpportunities] = useState<Opportunity[]>([
-    {
-      id: 1,
-      name: 'Trail Cleanup',
-      park: 'Yellowstone National Park',
-      date: '2024-11-05',
-      volunteersNeeded: 10,
-      volunteersSignedUp: 6,
-    },
-    {
-      id: 2,
-      name: 'Wildlife Monitoring',
-      park: 'Yosemite National Park',
-      date: '2024-12-01',
-      volunteersNeeded: 5,
-      volunteersSignedUp: 3,
-    },
-  ]);
-
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newOpportunity, setNewOpportunity] = useState<Opportunity>({
-    id: Date.now(),
+    id: 0,
     name: '',
     park: '',
     date: '',
@@ -40,13 +23,18 @@ const ManageOpportunities: React.FC = () => {
     volunteersSignedUp: 0,
   });
 
-  const handleDelete = (opportunityId: number) => {
-    const updatedOpportunities = opportunities.filter(opp => opp.id !== opportunityId);
-    setOpportunities(updatedOpportunities);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getOpportunities();
+      setOpportunities(data);
+    };
 
-  const handleEdit = (opportunityId: number) => {
-    alert(`Edit opportunity with ID: ${opportunityId}`);
+    fetchData();
+  }, []);
+
+  const handleDelete = async (opportunityId: number) => {
+    await deleteOpportunity(opportunityId);
+    setOpportunities(opportunities.filter((opp) => opp.id !== opportunityId));
   };
 
   const handleAddOpportunity = () => {
@@ -58,11 +46,35 @@ const ManageOpportunities: React.FC = () => {
     setNewOpportunity({ ...newOpportunity, [name]: value });
   };
 
-  const handleModalSubmit = () => {
-    setOpportunities([...opportunities, newOpportunity]);
-    setIsModalOpen(false);
-    setNewOpportunity({ id: Date.now(), name: '', park: '', date: '', volunteersNeeded: 0, volunteersSignedUp: 0 });
+  const handleModalSubmit = async () => {
+    try {
+      const opportunityPayload = {
+        name: newOpportunity.name,
+        park: newOpportunity.park,
+        date: newOpportunity.date,
+        time: "00:00:00", // Default time if not provided
+        description: "", // Optional description
+        hoursReq: 0, // Default hours required
+        volunteersNeeded: newOpportunity.volunteersNeeded,
+      };
+      const addedOpportunity = await addOpportunity(opportunityPayload);
+      setOpportunities([...opportunities, addedOpportunity]);
+      setIsModalOpen(false);
+      setNewOpportunity({
+        id: 0,
+        name: "",
+        park: "",
+        date: "",
+        volunteersNeeded: 0,
+        volunteersSignedUp: 0,
+      });
+    } catch (error) {
+      console.error("Error adding opportunity:", error);
+      alert("Failed to add opportunity. Please check your input and try again.");
+    }
   };
+  
+  
 
   return (
     <div className="manage-opportunities">
@@ -70,33 +82,32 @@ const ManageOpportunities: React.FC = () => {
       <button onClick={handleAddOpportunity} className="add-btn">Add Opportunity</button>
 
       {isModalOpen && (
-  <div className="modal">
-    <div className="modal-content">
-      <h2>Add New Opportunity</h2>
-      <label>
-        Name:
-        <input type="text" name="name" value={newOpportunity.name} onChange={handleModalChange} />
-      </label>
-      <label>
-        Park:
-        <input type="text" name="park" value={newOpportunity.park} onChange={handleModalChange} />
-      </label>
-      <label>
-        Date:
-        <input type="date" name="date" value={newOpportunity.date} onChange={handleModalChange} />
-      </label>
-      <label>
-        Volunteers Needed:
-        <input type="number" name="volunteersNeeded" value={newOpportunity.volunteersNeeded} onChange={handleModalChange} />
-      </label>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <button onClick={handleModalSubmit} className="submit-btn">Add Opportunity</button>
-        <button onClick={() => setIsModalOpen(false)} className="cancel-btn">Cancel</button>
-      </div>
-    </div>
-  </div>
-)}
-
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Add New Opportunity</h2>
+            <label>
+              Name:
+              <input type="text" name="name" value={newOpportunity.name} onChange={handleModalChange} />
+            </label>
+            <label>
+              Park:
+              <input type="text" name="park" value={newOpportunity.park} onChange={handleModalChange} />
+            </label>
+            <label>
+              Date:
+              <input type="date" name="date" value={newOpportunity.date} onChange={handleModalChange} />
+            </label>
+            <label>
+              Volunteers Needed:
+              <input type="number" name="volunteersNeeded" value={newOpportunity.volunteersNeeded} onChange={handleModalChange} />
+            </label>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <button onClick={handleModalSubmit} className="submit-btn">Add Opportunity</button>
+              <button onClick={() => setIsModalOpen(false)} className="cancel-btn">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="opportunity-table-wrapper">
         <table className="opportunity-table">
@@ -111,7 +122,7 @@ const ManageOpportunities: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {opportunities.map(opportunity => (
+            {opportunities.map((opportunity) => (
               <tr key={opportunity.id}>
                 <td>{opportunity.name}</td>
                 <td>{opportunity.park}</td>
@@ -119,7 +130,7 @@ const ManageOpportunities: React.FC = () => {
                 <td>{opportunity.volunteersNeeded}</td>
                 <td>{opportunity.volunteersSignedUp}</td>
                 <td>
-                  <button onClick={() => handleEdit(opportunity.id)}>Edit</button>
+                  <button>Edit</button>
                   <button onClick={() => handleDelete(opportunity.id)}>Delete</button>
                 </td>
               </tr>

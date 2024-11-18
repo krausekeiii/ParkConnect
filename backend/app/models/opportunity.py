@@ -4,8 +4,8 @@ class Opportunity(db.Model):
     __bind_key__ = 'user_db'
     __tablename__ = 'opportunities'
     __table_args__ = {'schema': 'opps'}
-    opportunity_ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    park_ID = db.Column(db.Integer, nullable=False)
+    opportunity_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    park_id = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String(80), nullable=False)
     date = db.Column(db.Date, nullable=False)
     time = db.Column(db.Time, nullable=False)
