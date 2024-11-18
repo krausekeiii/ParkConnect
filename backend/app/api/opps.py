@@ -41,3 +41,15 @@ def get_all_opps():
         return jsonify(opps), 400
     
     return jsonify(opps), 200
+
+@opp_bp.route('/filter_parks', methods=['GET'])
+def filter_parks():
+    park = request.json.get('park_ID')
+    if not park:
+        return jsonify({'error': 'Please provide a park ID'}), 400
+    
+    opps = opp_service.filter_parks(park)
+    if 'error' in opps:
+        return jsonify(opps), 400
+    
+    return jsonify(opps), 200
