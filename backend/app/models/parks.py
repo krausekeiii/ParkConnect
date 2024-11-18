@@ -4,13 +4,15 @@ class Park(db.Model):
     __bind_key__ = 'users_db'
     __tablename__ = 'parks'
     __table_args__ = {'schema': 'parks'}
-    park_ID = db.Column(db.Integer, primary_key=True)
+    park_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     state = db.Column(db.String(2), nullable=False)
     address = db.Column(db.String(80), nullable=False)
     phone_number = db.Column(db.String(10), nullable=False)
     hours = db.Column(db.String(80), nullable=False)
     url = db.Column(db.String(120))
+    latitude = db.Column(db.Float, nullable=False)  # Add latitude field
+    longitude = db.Column(db.Float, nullable=False)  # Add longitude field
     # may add more as needed
 
     #used for debugging label to decrease ambiguity

@@ -1,30 +1,43 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
+import { signupUser } from '../services/api'; 
 
 const Signup: React.FC<{ setIsAuthenticated: (value: boolean) => void, setUserName: (name: string) => void }> = ({ setIsAuthenticated, setUserName }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      setError('Passwords do not match!');
       return;
     }
-    // Perform signup logic here
-    setIsAuthenticated(true);
-    setUserName(name); 
 
-    navigate('/', { state: { successMessage: 'Signup was successful!' } });
+    try {
+      const response = await signupUser(name, email, password);
+      if (response.error) {
+        setError(response.error);
+      } else {
+        setIsAuthenticated(true);
+        setUserName(name);
+        navigate('/', { state: { successMessage: 'Signup was successful!' } });
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again later.');
+    }
   };
 
   return (
     <div className="signup-container">
       <h2>Signup</h2>
+      {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSignup}>
         <div className="form-group">
           <label>Name:</label>

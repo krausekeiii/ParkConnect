@@ -1,4 +1,4 @@
-from app.models import Opportunity, Volunteer, User
+from app.models import Opportunity
 from app import db
 
 def tojson(opp):
@@ -26,6 +26,19 @@ def get_opp(oppID):
         return {'error': 'Opportunity not found'}
     return tojson(opp)
 
+# Service function to get all opportunities
 def get_all_opps():
     opps = db.session.query(Opportunity).all()
     return [tojson(opp) for opp in opps]
+
+def delete_opp(opportunity_id):
+    opp = db.session.query(Opportunity).filter_by(opportunity_id=opportunity_id).first()
+    if not opp:
+         return {"error": "Opportunity not found"}
+    try:
+        db.session.delete(opp)
+        db.session.commit()
+        return {"message": "Opportunity deleted successfully"}
+    except Exception as e:
+        db.session.rollback()
+        return {"error": f"Failed to delete opportunity: {str(e)}"}

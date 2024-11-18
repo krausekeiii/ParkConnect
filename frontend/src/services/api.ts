@@ -3,8 +3,8 @@ import axios from 'axios';
 // Sign up new user
 export const signupUser = async (userName: string, email: string, password: string) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/signup`, {
-      userName,
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/signup`, {
+      username: userName,
       email,
       password,
     });
@@ -15,10 +15,10 @@ export const signupUser = async (userName: string, email: string, password: stri
 };
 
 // Log in user
-export const loginUser = async (username: string, password: string) => {
+export const loginUser = async (email: string, password: string) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-      username,
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, {
+      email,
       password,
     });
     return response.data;
@@ -27,28 +27,44 @@ export const loginUser = async (username: string, password: string) => {
   }
 };
 
-// Mock opportunities API
 export const getOpportunities = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: 1,
-          title: "Trail Maintenance",
-          parkName: "Yellowstone National Park",
-          state: "Wyoming",
-          description: "Help maintain trails at Yellowstone.",
-        },
-        {
-          id: 2,
-          title: "Wildlife Monitoring",
-          parkName: "Yosemite National Park",
-          state: "California",
-          description: "Assist in monitoring wildlife in Yosemite.",
-        },
-      ]);
-    }, 500);
-  });
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/opportunities`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to fetch opportunities:", error);
+    return [];
+  }
+};
+
+
+export const addOpportunity = async (opportunity: any) => {
+  try {
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/opportunities/create`, {
+      park_ID: opportunity.park, // Map to backend key
+      name: opportunity.name,
+      date: opportunity.date,
+      time: opportunity.time || "00:00:00", // Provide default time
+      description: opportunity.description || "",
+      hours_req: opportunity.hoursReq || 0,
+      num_volunteers_needed: opportunity.volunteersNeeded || 0,
+      num_volunteers: 0, // Default to 0
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to add opportunity:", error);
+    throw error;
+  }
+};
+
+
+export const deleteOpportunity = async (id: number) => {
+  try {
+    await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/opportunities/${id}`);
+  } catch (error: any) {
+    console.error("Failed to delete opportunity:", error);
+    throw error;
+  }
 };
 
 // Mock impact tracker API
