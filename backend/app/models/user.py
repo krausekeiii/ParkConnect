@@ -9,11 +9,12 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(20), nullable=False)
-    name = db.Column(db.String(80))
+    name = db.Column(db.String(80), nullable=False)
     description = db.Column(db.String(200))
-    hours = db.Column(db.Float, nullable=False)
-    vol_count = db.Column(db.Integer, nullable=False)
-    role = db.Column(db.String(20), nullable=False, default='user')  # Add the role column
+    hours = db.Column(db.Float, nullable=False, default=0)
+    vol_count = db.Column(db.Integer, nullable=False, default=0)
+    role = db.Column(db.String(20), nullable=False, default='user')
+
     # may add more as needed
 
     #used for debugging label to decrease ambiguity
