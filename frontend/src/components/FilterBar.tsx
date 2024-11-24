@@ -5,12 +5,16 @@ import './FilterBar.css';
 
 interface FilterBarProps {
   onFilterChange: (filters: any) => void;
+  availableStates: string[];
+  availableParks: string[];
 }
 
-const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
+const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, availableStates, availableParks }) => {
   const [keyword, setKeyword] = useState('');
   const [filterType, setFilterType] = useState('');
   const [sortType, setSortType] = useState('');
+  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+  const [opportunityType, setOpportunityType] = useState('');
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -18,7 +22,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(event.target.value);
-    onFilterChange({ keyword: event.target.value, filterType, sortType });
+    onFilterChange({ keyword: event.target.value, filterType, sortType, dateRange, opportunityType });
   };
 
   const handleFilterClick = () => {
@@ -33,13 +37,24 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setFilterType(event.target.value);
-    onFilterChange({ keyword, filterType: event.target.value, sortType });
+    onFilterChange({ keyword, filterType: event.target.value, sortType, dateRange, opportunityType });
     setIsFilterDropdownOpen(false);
+  };
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>, field: 'start' | 'end') => {
+    const updatedDateRange = { ...dateRange, [field]: event.target.value };
+    setDateRange(updatedDateRange);
+    onFilterChange({ keyword, filterType, sortType, dateRange: updatedDateRange, opportunityType });
+  };
+
+  const handleOpportunityTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setOpportunityType(event.target.value);
+    onFilterChange({ keyword, filterType, sortType, dateRange, opportunityType: event.target.value });
   };
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSortType(event.target.value);
-    onFilterChange({ keyword, filterType, sortType: event.target.value });
+    onFilterChange({ keyword, filterType, sortType: event.target.value, dateRange, opportunityType });
     setIsSortDropdownOpen(false);
   };
 
@@ -64,7 +79,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
     <div className="filter-bar">
       <input
         type="text"
-        placeholder="Search opportunities..."
+        placeholder="Search opportunities, states, or parks..."
         value={keyword}
         onChange={handleSearchChange}
       />
@@ -76,32 +91,40 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
           <div className="dropdown-menu">
             <select onChange={handleFilterChange} value={filterType}>
               <option value="">Select a filter</option>
-              <optgroup label="Opportunity Type">
-                <option value="Trail Maintenance">Trail Maintenance</option>
-                <option value="Wildlife Monitoring">Wildlife Monitoring</option>
-                <option value="Education/Interpretation">Education/Interpretation</option>
-                <option value="Visitor Services">Visitor Services</option>
-                <option value="Resource Management">Resource Management</option>
+              <optgroup label="State">
+                {availableStates.map((state) => (
+                  <option key={state} value={state}>{state}</option>
+                ))}
               </optgroup>
-              <optgroup label="Location">
-                <option value="National Park Name">National Park Name</option>
-                <option value="State">State</option>
+              <optgroup label="National Park">
+                {availableParks.map((park) => (
+                  <option key={park} value={park}>{park}</option>
+                ))}
               </optgroup>
-              <optgroup label="Date Range">
-                <option value="Upcoming Week">Upcoming Week</option>
-                <option value="Upcoming Month">Upcoming Month</option>
-                <option value="Custom Date Range">Custom Date Range</option>
-              </optgroup>
-              <optgroup label="Difficulty Level">
-                <option value="Easy">Easy</option>
-                <option value="Moderate">Moderate</option>
-                <option value="Hard">Hard</option>
-              </optgroup>
-              <optgroup label="Duration">
-                <option value="One-day">One-day</option>
-                <option value="Weekend">Weekend</option>
-                <option value="Week-long">Week-long</option>
-              </optgroup>
+            </select>
+            <label>
+              Start Date:
+              <input
+                type="date"
+                value={dateRange.start}
+                onChange={(e) => handleDateChange(e, 'start')}
+              />
+            </label>
+            <label>
+              End Date:
+              <input
+                type="date"
+                value={dateRange.end}
+                onChange={(e) => handleDateChange(e, 'end')}
+              />
+            </label>
+            <select onChange={handleOpportunityTypeChange} value={opportunityType}>
+              <option value="">Select Opportunity Type</option>
+              <option value="Maintenance">Maintenance</option>
+              <option value="Wildlife Management">Wildlife Management</option>
+              <option value="Education/Interpretation">Education/Interpretation</option>
+              <option value="Visitor Services">Visitor Services</option>
+              <option value="Resource Management">Resource Management</option>
             </select>
           </div>
         )}
@@ -113,27 +136,12 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
         {isSortDropdownOpen && (
           <div className="dropdown-menu">
             <select onChange={handleSortChange} value={sortType}>
-              <option value="">Select a sort option</option>
-              <optgroup label="Alphabetical">
-                <option value="A to Z">A to Z</option>
-                <option value="Z to A">Z to A</option>
-              </optgroup>
-              <optgroup label="Date">
-                <option value="Closest First">Closest First</option>
-                <option value="Farthest First">Farthest First</option>
-              </optgroup>
-              <optgroup label="Popularity">
-                <option value="Most Popular">Most Popular</option>
-                <option value="Least Popular">Least Popular</option>
-              </optgroup>
-              <optgroup label="Difficulty Level">
-                <option value="Easiest First">Easiest First</option>
-                <option value="Hardest First">Hardest First</option>
-              </optgroup>
-              <optgroup label="Location">
-                <option value="Nearest First">Nearest First</option>
-                <option value="Farthest First">Farthest First</option>
-              </optgroup>
+              <option value="">Sort by...</option>
+              <option value="A to Z">A to Z</option>
+              <option value="Z to A">Z to A</option>
+              <option value="Closest First">Date (Closest First)</option>
+              <option value="Furthest First">Date (Furthest First)</option>
+              <option value="Most Volunteers">Most Volunteers</option>
             </select>
           </div>
         )}
