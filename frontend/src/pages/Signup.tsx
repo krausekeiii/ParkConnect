@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
-import { signupUser } from '../services/api'; 
+import { signupUser } from '../services/api';
 
 const Signup: React.FC<{ setIsAuthenticated: (value: boolean) => void, setUserName: (name: string) => void }> = ({ setIsAuthenticated, setUserName }) => {
   const [name, setName] = useState('');
+  const [userName, setUserNameField] = useState(''); // Camel case
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [description, setDescription] = useState(''); // New description field
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -21,7 +23,8 @@ const Signup: React.FC<{ setIsAuthenticated: (value: boolean) => void, setUserNa
     }
 
     try {
-      const response = await signupUser(name, email, password);
+      // Ensure `userName` is sent as camel case
+      const response = await signupUser(userName, email, password, name, description);
       if (response.error) {
         setError(response.error);
       } else {
@@ -40,11 +43,20 @@ const Signup: React.FC<{ setIsAuthenticated: (value: boolean) => void, setUserNa
       {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSignup}>
         <div className="form-group">
-          <label>Name:</label>
+          <label>Full Name:</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Username:</label>
+          <input
+            type="text"
+            value={userName}
+            onChange={(e) => setUserNameField(e.target.value)} // Camel case handling
             required
           />
         </div>
@@ -73,6 +85,13 @@ const Signup: React.FC<{ setIsAuthenticated: (value: boolean) => void, setUserNa
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
+          />
+        </div>
+        <div className="form-group">
+          <label>Short Bio (Description):</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <button type="submit" className="btn">Signup</button>
