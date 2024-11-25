@@ -95,6 +95,43 @@
   resize: vertical;
 }
 
+.signup-form select {
+  width: 100%;
+  padding: 12px;
+  margin: 0;
+  background-color: var(--input-bg);
+  border: 2px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  color: var(--nps-stone);
+  appearance: none; /* Removes default arrow styling for a cleaner look */
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path d="M0 0h10L5 5z" fill="%23C4A484"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 10px 10px;
+  cursor: pointer;
+}
+
+.signup-form select:focus {
+  outline: none;
+  border-color: var(--nps-sage);
+  box-shadow: 0 0 0 3px rgba(135, 168, 120, 0.2);
+}
+
+.signup-form option {
+  background-color: var(--nps-cream);
+  color: var(--nps-stone);
+  padding: 12px;
+  font-size: 1rem;
+}
+
+.signup-form select::-ms-expand {
+  display: none; /* Hides default dropdown arrow for older browsers */
+}
+
 .signup-button {
   background-color: var(--nps-green);
   color: white;
