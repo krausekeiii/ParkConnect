@@ -81,22 +81,24 @@ def register_volunteer(email, opp_ID):
     if existing_vol:
         return {'error': 'Volunteer with that email already registered for this event'}
     
-    #update opportunties db, num_volunteers_needed field
-    opp = db.session.query(Opportunity).filter_by(opportunity_ID=opp_ID).first()
+    # Update opportunities db, num_volunteers_needed field
+    opp = db.session.query(Opportunity).filter_by(opportunity_id=opp_ID).first()  # Use opportunity_id
+    if not opp:
+        return {'error': 'Opportunity not found'}
     new_count = opp.num_volunteers + 1
     if new_count > opp.num_volunteers_needed:
         return {'error': 'Too many volunteers for this event'}
     opp.num_volunteers = new_count
     opp.num_volunteers_needed -= 1
 
-    # add user to volunteer table
-    new_vol = Volunteer(email=email, opportunity_ID=opp_ID)
+    # Add user to volunteer table
+    new_vol = Volunteer(email=email, opportunity_id=opp_ID)
     db.session.add(new_vol)
 
-    # update user opp count
+    # Update user opp count
     existing_user.vol_count += 1
 
-    # get hours_req for opportunity, update user hours volunteered
+    # Get hours_req for opportunity, update user hours volunteered
     hours = opp.hours_req
     existing_user.hours += hours
 
