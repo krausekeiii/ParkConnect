@@ -30,6 +30,6 @@ def create_app(config_class=Config):
     app.register_blueprint(vol_bp, url_prefix='/vol')
     app.register_blueprint(opp_bp, url_prefix='/api')
     app.register_blueprint(admin_bp, url_prefix='/admin')
-    app.register_blueprint(user_bp, url_prefix='/user')
+    app.register_blueprint(user_bp, url_prefix='/api/user')
 
     return app

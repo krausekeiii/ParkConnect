@@ -77,41 +77,38 @@ def register_volunteer(email, opp_ID):
     existing_user = db.session.query(User).filter_by(email=email).first()
     if not existing_user:
         return {'error': 'User with that email does not exist'}
-    existing_vol = db.session.query(Volunteer).filter_by(email=email).first()
+
+    existing_vol = db.session.query(Volunteer).filter_by(email=email, opportunity_id=opp_ID).first()
     if existing_vol:
         return {'error': 'Volunteer with that email already registered for this event'}
-    
-    # Update opportunities db, num_volunteers_needed field
-    opp = db.session.query(Opportunity).filter_by(opportunity_id=opp_ID).first()  # Use opportunity_id
+
+    # Fetch the opportunity
+    opp = db.session.query(Opportunity).filter_by(opportunity_id=opp_ID).first()
     if not opp:
         return {'error': 'Opportunity not found'}
-    new_count = opp.num_volunteers + 1
-    if new_count > opp.num_volunteers_needed:
-        return {'error': 'Too many volunteers for this event'}
-    opp.num_volunteers = new_count
-    opp.num_volunteers_needed -= 1
 
-    # Add user to volunteer table
+    # Corrected logic to check if the event is full
+    if opp.num_volunteers >= opp.num_volunteers_needed:
+        return {'error': 'Too many volunteers for this event'}
+
+    # Update the number of volunteers
+    opp.num_volunteers += 1
+
+    # Add the volunteer to the volunteers table
     new_vol = Volunteer(email=email, opportunity_id=opp_ID)
     db.session.add(new_vol)
 
-    # Update user opp count
+    # Update the user's volunteer count and hours
     existing_user.vol_count += 1
-
-    # Get hours_req for opportunity, update user hours volunteered
-    hours = opp.hours_req
-    existing_user.hours += hours
+    existing_user.hours += opp.hours_req
 
     try:
         db.session.commit()
-        user_data = {
-            'email': new_vol.email,
-            'opportunity_ID': new_vol.opportunity_ID
-        }
-        return jsonify(user_data), 201
+        return {'message': f'Successfully registered {email} for opportunity {opp_ID}'}, 201
     except Exception as e:
         db.session.rollback()
         return {'error': f'Failed to register volunteer: {str(e)}'}
+
     
 def unregister_vol(email, opp_ID):
     # Check if user exists
