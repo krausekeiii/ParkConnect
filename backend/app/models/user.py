@@ -6,6 +6,7 @@ class User(db.Model):
     __bind_key__ = 'user_db'
     __tablename__ = 'users'
     __table_args__ = {'schema': 'users'}
+    id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(20), nullable=False)

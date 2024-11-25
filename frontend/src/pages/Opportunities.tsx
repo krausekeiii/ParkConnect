@@ -54,27 +54,29 @@ const Opportunities: React.FC = () => {
       'Visitor Services': ['Visitor Assistance', 'Trailhead Ambassador'],
       'Resource Management': ['Canyon Cleanup', 'Geothermal Study Support'],
     };
-  
+
     const filtered = opportunities.filter((opportunity) => {
       const matchesKeyword = [
         opportunity.name.toLowerCase(),
         opportunity.state?.toLowerCase(),
         opportunity.park_name?.toLowerCase(),
       ].some((field) => field?.includes(filters.keyword.toLowerCase()));
-  
-      const matchesFilter = !filters.filterType ||
+
+      const matchesFilter =
+        !filters.filterType ||
         opportunity.state === filters.filterType ||
         opportunity.park_name === filters.filterType;
-  
-      const matchesDate = (!filters.dateRange.start || new Date(opportunity.date) >= new Date(filters.dateRange.start)) &&
+
+      const matchesDate =
+        (!filters.dateRange.start || new Date(opportunity.date) >= new Date(filters.dateRange.start)) &&
         (!filters.dateRange.end || new Date(opportunity.date) <= new Date(filters.dateRange.end));
-  
-      const matchesOpportunityType = !filters.opportunityType ||
-        typeMapping[filters.opportunityType]?.includes(opportunity.name);
-  
+
+      const matchesOpportunityType =
+        !filters.opportunityType || typeMapping[filters.opportunityType]?.includes(opportunity.name);
+
       return matchesKeyword && matchesFilter && matchesDate && matchesOpportunityType;
     });
-  
+
     const sorted = [...filtered].sort((a, b) => {
       switch (filters.sortType) {
         case 'A to Z':
@@ -91,10 +93,10 @@ const Opportunities: React.FC = () => {
           return 0;
       }
     });
-  
+
     setFilteredOpportunities(sorted);
   };
-  
+
   const handleOpportunityClick = (opportunity: Opportunity) => {
     setSelectedOpportunity(opportunity);
   };
@@ -113,9 +115,7 @@ const Opportunities: React.FC = () => {
       />
       {filteredOpportunities.map((opportunity) => (
         <div key={opportunity.id} className="opportunity">
-          <h2 onClick={() => handleOpportunityClick(opportunity)}>
-            {opportunity.name}
-          </h2>
+          <h2 onClick={() => handleOpportunityClick(opportunity)}>{opportunity.name}</h2>
           <div className="map-container">
             <Map
               position={
@@ -131,11 +131,18 @@ const Opportunities: React.FC = () => {
         </div>
       ))}
       {selectedOpportunity && (
-        <Modal
-          isOpen={!!selectedOpportunity}
-          onClose={closeModal}
-          content={selectedOpportunity.description}
-        />
+        <Modal isOpen={!!selectedOpportunity} onClose={closeModal} title={selectedOpportunity.name}>
+          <p>{selectedOpportunity.description}</p>
+          <p>
+            <strong>Park:</strong> {selectedOpportunity.park_name}
+          </p>
+          <p>
+            <strong>Date:</strong> {new Date(selectedOpportunity.date).toLocaleDateString()}
+          </p>
+          <p>
+            <strong>Volunteers:</strong> {selectedOpportunity.num_volunteers}
+          </p>
+        </Modal>
       )}
     </div>
   );
