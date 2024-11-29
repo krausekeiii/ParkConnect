@@ -1,7 +1,7 @@
 from app import db
 
 class Park(db.Model):
-    __bind_key__ = 'users_db'
+    __bind_key__ = 'user_db'
     __tablename__ = 'parks'
     __table_args__ = {'schema': 'parks'}
     park_id = db.Column(db.Integer, primary_key=True)

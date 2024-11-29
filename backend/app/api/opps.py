@@ -1,6 +1,6 @@
-from flask import Blueprint, request, jsonify
+from flask import request, jsonify
 from app.services.opp_service import create_opp, get_all_opps, delete_opp
-from app.models import Opportunity, Park  # Import the Park model
+from app.api import opp_bp
 
 @opp_bp.route('/create', methods=['POST'])
 def create_opp_endpoint():
@@ -35,51 +35,9 @@ def create_opp_endpoint():
 # API endpoint to fetch all opportunities
 @opp_bp.route('/opportunities', methods=['GET'])
 def get_opportunities():
-    from app.models import Opportunity, Park
-    from app import db
-
-    # Perform a join between opportunities and parks
-    opps = db.session.query(
-        Opportunity,
-        Park.name.label("park_name"),
-        Park.state,
-        Park.address,
-        Park.phone_number,
-        Park.hours,
-        Park.url,
-        Park.latitude,
-        Park.longitude
-    ).join(
-        Park, Opportunity.park_id == Park.park_id
-    ).all()
-
-    opportunities = [
-        {
-            "id": opp.opportunity_id,
-            "name": opp.name,
-            "park_id": opp.park_id,
-            "date": str(opp.date),
-            "time": str(opp.time),
-            "description": opp.description,
-            "hours_req": opp.hours_req,
-            "volunteers_needed": opp.num_volunteers_needed,
-            "volunteers_signed_up": opp.num_volunteers,
-            "latitude": latitude,
-            "longitude": longitude,
-            "park_name": park_name,
-            "state": state,
-            "address": address,
-            "phone_number": phone_number,
-            "hours": hours,
-            "url": url
-        }
-        for opp, park_name, state, address, phone_number, hours, url, latitude, longitude in opps
-    ]
-    return jsonify(opportunities), 200
-
-
-
-
+    if "error" in get_all_opps:
+        return jsonify(get_all_opps), 404
+    return jsonify(get_all_opps), 200
 
 # API endpoint to delete an opportunity
 @opp_bp.route('/<int:opportunity_id>', methods=['DELETE'])

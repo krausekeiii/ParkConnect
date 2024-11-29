@@ -1,4 +1,4 @@
-from app.models import User, Opportunity, Volunteer, Admin
+from app.models import User, Opportunity, Volunteer, Admin, Park
 from app import db
 
 def jsonadmin(admin):
@@ -21,14 +21,15 @@ def add_admin(new, curr, parkID):
         return {'error': 'Permission denied- Current user is not an admin'}
     try:
         # add new admin to admin table
-        new_admin = Admin(email=new, parkID=parkID)
-        db.session.add(new_admin)
+        admin = Admin(email=new, parkID=parkID)
+        db.session.add(admin)
+        new_admin.role = 'admin'
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         return {'error': f'Failed to add admin to admin table: {str(e)}'}
     
-    return jsonadmin(new_admin)
+    return jsonadmin(admin)
 
 def remove_admin(old, curr, parkID):
     old_admin = User.query.filter_by(email=old).first()
@@ -84,3 +85,33 @@ def get_total_hours(parkID):
     except Exception as e:
         return {'error': f'Failed to get total hours: {str(e)}'}
 
+def notify_users(parkID, message):
+    # get all users who have volunteered at parkID
+    try:
+        # gets email of anyone who's ever volunteerd at parkID
+        emails = db.session.query(Volunteer.email).join(Opportunity, Volunteer.opportunity_id == Opportunity.opportunity_id).filter(Opportunity.park_id == parkID).distinct().all()
+        park = db.session.query(Park.name).filter(Park.park_id == parkID).first()
+        # load email configurations from .env file
+        from smtplib import SMTP
+        from dotenv import load_dotenv
+        import os
+
+        email_list = [email[0] for email in emails]
+
+        load_dotenv()
+        EMAIL_ID = os.getenv('EMAIL_ID')
+        EMAIL_P = os.getenv('EMAIL_P')
+        EMAIL_PORT = os.getenv('EMAIL_PORT')
+        EMAIL_HOST = os.getenv('EMAIL_HOST')
+
+        # send email to all users
+        with SMTP(EMAIL_HOST, EMAIL_PORT) as s:
+            s.starttls()
+            s.login(EMAIL_ID, EMAIL_P)
+
+            for email in email_list:
+                s.sendmail(EMAIL_ID, email, f"Subject: Notification from {park}\n\n{message}")
+
+        return {'message': f"Emails sent successfully to {len(email_list)} users."}
+    except Exception as e:
+        return {'error': f"Failed to notify users: {str(e)}"}

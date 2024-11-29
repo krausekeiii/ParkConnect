@@ -12,3 +12,5 @@ class Config:
     }
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # Add other common configurations
+
+    # email configurations for notifications

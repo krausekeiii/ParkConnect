@@ -1,13 +1,13 @@
-from app.models import Opportunity
+from app.models import Opportunity, Park
 from app import db
 
 def tojson(opp):
     return {
-                'oppID': opp.opportunity_id, 'parkID': opp.park_id, 'name': opp.name,\
+                'id': opp.opportunity_id, 'park_id': opp.park_id, 'name': opp.name,\
                 'date': opp.date.strftime("%Y-%m-%d") if opp.date else None,\
                 'time': opp.time.strftime("%H:%M:%S") if opp.time else None,\
-                'description': opp.description, 'hours_req': opp.hours_req, 'num_volunteers': opp.num_volunteers,\
-                'num_volunteers_needed': opp.num_volunteers_needed
+                'description': opp.description, 'hours_req': opp.hours_req, \
+                'volunteers_signed_up': opp.num_volunteers, 'volunteers_needed': opp.num_volunteers_needed
             }
 
 def create_opp(park_ID, name, date, time, description, hours_req, num_volunteers_needed, num_volunteers=0):
@@ -28,9 +28,49 @@ def get_opp(oppID):
 
 # Service function to get all opportunities
 def get_all_opps():
-    opps = db.session.query(Opportunity).all()
-    return [tojson(opp) for opp in opps]
+    try:
+        # Perform a join between opportunities and parks
+        opps = db.session.query(
+            Opportunity,
+            Park.name.label("park_name"),
+            Park.state,
+            Park.address,
+            Park.phone_number,
+            Park.hours,
+            Park.url,
+            Park.latitude,
+            Park.longitude
+        ).join(
+            Park, Opportunity.park_id == Park.park_id
+        ).all()
 
+        opportunities = [
+            {
+                "id": opp.opportunity_id,
+                "name": opp.name,
+                "park_id": opp.park_id,
+                "date": str(opp.date),
+                "time": str(opp.time),
+                "description": opp.description,
+                "hours_req": opp.hours_req,
+                "volunteers_needed": opp.num_volunteers_needed,
+                "volunteers_signed_up": opp.num_volunteers,
+                "latitude": latitude,
+                "longitude": longitude,
+                "park_name": park_name,
+                "state": state,
+                "address": address,
+                "phone_number": phone_number,
+                "hours": hours,
+                "url": url
+            }
+            for opp, park_name, state, address, phone_number, hours, url, latitude, longitude in opps
+        ]
+
+        return opportunities
+    except Exception as e:
+        return {"error": f"Failed to fetch opportunities: {str(e)}"}
+    
 def delete_opp(opportunity_id):
     opp = db.session.query(Opportunity).filter_by(opportunity_id=opportunity_id).first()
     if not opp:
