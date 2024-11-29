@@ -10,7 +10,7 @@ class Volunteer(db.Model):
 
     #used for debugging label to decrease ambiguity
     def __repr__(self):
-        return '<Volunteer %r>' % self.email
+        return f'<Volunteer {self.email}, Opportunity {self.opportunity_id}>'
     
 
 '''

@@ -1,12 +1,14 @@
 import axios from 'axios';
 
 // Sign up new user
-export const signupUser = async (userName: string, email: string, password: string) => {
+export const signupUser = async (userName: string, email: string, password: string, name: string, description: string) => {
   try {
     const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/signup`, {
-      username: userName,
+      userName,
       email,
       password,
+      name,
+      description, // Add the description field
     });
     return response.data;
   } catch (error: any) {
@@ -90,11 +92,17 @@ export const trackGetInvolved = async () => {
   });
 };
 
-// Mock volunteer signup API
-export const signupVolunteer = async (name: string, email: string, interest: string) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ message: `Thank you, ${name}, for signing up!` });
-    }, 500); // Simulate network delay
-  });
+// Volunteer signup
+export const signupVolunteer = async (name: string, email: string, opp_ID: string, info: string) => {
+  try {
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/volunteer/signup`, {
+      name, // Add the name field
+      email,
+      opp_ID,
+      info, // Add the additional information field
+    });
+    return response.data;
+  } catch (error: any) {
+    return { error: error?.response?.data?.error || 'An error occurred' };
+  }
 };
