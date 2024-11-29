@@ -59,11 +59,12 @@ def get_stats(parkID):
 @admin_bp.route('/notify', methods=['POST'])
 def notify_users():
     parkID = request.json.get('parkID')   # park id
+    subject = request.json.get('subject')
     message = request.json.get('message')
     if not parkID or not message:
         return jsonify({'error': 'Please provide a parkID and message'}), 400
     
-    result = admin_service.notify_users(parkID, message)
+    result = admin_service.notify_users(parkID, message, subject)
     if 'error' in result:
         return jsonify(result), 500
     return jsonify(result), 200

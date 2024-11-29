@@ -1,5 +1,7 @@
 from app.models import User, Opportunity, Volunteer, Admin, Park
 from app import db
+import dotenv
+import os
 
 def jsonadmin(admin):
     return {
@@ -85,33 +87,35 @@ def get_total_hours(parkID):
     except Exception as e:
         return {'error': f'Failed to get total hours: {str(e)}'}
 
-def notify_users(parkID, message):
+def notify_users(parkID, message, subject):
     # get all users who have volunteered at parkID
     try:
         # gets email of anyone who's ever volunteerd at parkID
-        emails = db.session.query(Volunteer.email).join(Opportunity, Volunteer.opportunity_id == Opportunity.opportunity_id).filter(Opportunity.park_id == parkID).distinct().all()
+        emails = [user['email'] for user in get_top3_users(parkID)]
         park = db.session.query(Park.name).filter(Park.park_id == parkID).first()
-        # load email configurations from .env file
-        from smtplib import SMTP
-        from dotenv import load_dotenv
-        import os
+        import smtplib
+        from email.mime.text import MIMEText
+        from email.mime.multipart import MIMEMultipart
 
-        email_list = [email[0] for email in emails]
-
-        load_dotenv()
+        dotenv.load_dotenv()
         EMAIL_ID = os.getenv('EMAIL_ID')
         EMAIL_P = os.getenv('EMAIL_P')
-        EMAIL_PORT = os.getenv('EMAIL_PORT')
-        EMAIL_HOST = os.getenv('EMAIL_HOST')
 
-        # send email to all users
-        with SMTP(EMAIL_HOST, EMAIL_PORT) as s:
-            s.starttls()
-            s.login(EMAIL_ID, EMAIL_P)
-
-            for email in email_list:
-                s.sendmail(EMAIL_ID, email, f"Subject: Notification from {park}\n\n{message}")
-
-        return {'message': f"Emails sent successfully to {len(email_list)} users."}
+        # Prepare the email
+        msg = MIMEMultipart()
+        msg['From'] = EMAIL_ID
+        msg['Subject'] = subject
+        
+        for receiver_email in emails:
+            msg['To'] = receiver_email
+            msg.attach(MIMEText(message, 'plain'))
+            # Send the email
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()  # Secure connection
+                server.login(EMAIL_ID, EMAIL_P)
+                server.sendmail(EMAIL_ID, receiver_email, msg.as_string())
+            print(f"Email sent successfully to {receiver_email}!")
+        return {'message': f'Email sent to all users who have volunteered at {park.name}'}
     except Exception as e:
-        return {'error': f"Failed to notify users: {str(e)}"}
+        print(f"Error: {e}")
+        return {'error': f'Failed to send email: {str(e)}'}

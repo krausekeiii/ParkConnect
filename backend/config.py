@@ -5,12 +5,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    """Base configuration."""
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    SQLALCHEMY_BINDS={
-            'user_db': os.getenv('USER_DATABASE_URL')  # User database
-    }
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    # Add other common configurations
-
-    # email configurations for notifications
+        """Base configuration."""
+        SECRET_KEY = os.getenv('SECRET_KEY')
+        SQLALCHEMY_BINDS={
+                'user_db': os.getenv('USER_DATABASE_URL')  # User database
+        }
+        SQLALCHEMY_TRACK_MODIFICATIONS = False
+        # Add other common configurations
