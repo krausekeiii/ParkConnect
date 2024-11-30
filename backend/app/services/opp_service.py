@@ -82,3 +82,42 @@ def delete_opp(opportunity_id):
     except Exception as e:
         db.session.rollback()
         return {"error": f"Failed to delete opportunity: {str(e)}"}
+    
+def edit_opp(opportunity_id, data):
+    opportunity = Opportunity.query.get(opportunity_id)
+    
+    if not opportunity:
+        return {'error': 'Opportunity not found'}, 404
+
+    # Validate input (you can add additional validation as needed)
+    name = data.get('name')
+    date = data.get('date')
+    time = data.get('time')
+    description = data.get('description')
+    hours_req = data.get('hours_req')
+    num_volunteers = data.get('num_volunteers')
+    num_volunteers_needed = data.get('num_volunteers_needed')
+
+    # Update the opportunity with the new values
+    if name:
+        opportunity.name = name
+    if date:
+        opportunity.date = date
+    if time:
+        opportunity.time = time
+    if description:
+        opportunity.description = description
+    if hours_req is not None:
+        opportunity.hours_req = hours_req
+    if num_volunteers is not None:
+        opportunity.num_volunteers = num_volunteers
+    if num_volunteers_needed is not None:
+        opportunity.num_volunteers_needed = num_volunteers_needed
+
+    # Commit the changes to the database
+    try:
+        db.session.commit()
+        return {'message': f'Opportunity {opportunity_id} updated successfully'}, 200
+    except Exception as e:
+        db.session.rollback()
+        return {'error': f'Failed to update opportunity: {str(e)}'}, 500
