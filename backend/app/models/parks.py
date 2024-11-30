@@ -4,7 +4,7 @@ class Park(db.Model):
     __bind_key__ = 'user_db'
     __tablename__ = 'parks'
     __table_args__ = {'schema': 'parks'}
-    park_id = db.Column(db.Integer, primary_key=True)
+    park_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(80), nullable=False)
     state = db.Column(db.String(2), nullable=False)
     address = db.Column(db.String(80), nullable=False)

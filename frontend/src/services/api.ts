@@ -31,7 +31,7 @@ export const loginUser = async (email: string, password: string) => {
 
 export const getOpportunities = async () => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/opportunities`);
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/opp/opportunities`);
     return response.data;
   } catch (error: any) {
     console.error("Failed to fetch opportunities:", error);
@@ -42,15 +42,14 @@ export const getOpportunities = async () => {
 
 export const addOpportunity = async (opportunity: any) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/opportunities/create`, {
-      park_ID: opportunity.park, // Map to backend key
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/opp/create`, {
+      park_id: opportunity.park_id, // Ensure the field name matches backend
       name: opportunity.name,
       date: opportunity.date,
       time: opportunity.time || "00:00:00", // Provide default time
       description: opportunity.description || "",
       hours_req: opportunity.hoursReq || 0,
       num_volunteers_needed: opportunity.volunteersNeeded || 0,
-      num_volunteers: 0, // Default to 0
     });
     return response.data;
   } catch (error: any) {
@@ -62,7 +61,7 @@ export const addOpportunity = async (opportunity: any) => {
 
 export const deleteOpportunity = async (id: number) => {
   try {
-    await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/opportunities/${id}`);
+    await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/opp/delete/${id}`);
   } catch (error: any) {
     console.error("Failed to delete opportunity:", error);
     throw error;

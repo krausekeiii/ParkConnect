@@ -3,15 +3,15 @@ from app import db
 
 def tojson(opp):
     return {
-                'id': opp.opportunity_id, 'park_id': opp.park_id, 'name': opp.name,\
+                'opportunity_id': opp.opportunity_id, 'park_id': opp.park_id, 'name': opp.name,\
                 'date': opp.date.strftime("%Y-%m-%d") if opp.date else None,\
                 'time': opp.time.strftime("%H:%M:%S") if opp.time else None,\
                 'description': opp.description, 'hours_req': opp.hours_req, \
                 'volunteers_signed_up': opp.num_volunteers, 'volunteers_needed': opp.num_volunteers_needed
             }
 
-def create_opp(park_ID, name, date, time, description, hours_req, num_volunteers_needed, num_volunteers=0):
-    new_opp = Opportunity(park_ID=park_ID, name=name, date=date, time=time, hours_req=hours_req, num_volunteers_needed=num_volunteers_needed, num_volunteers=num_volunteers, description=description)
+def create_opp(park_id, name, date, time, description, hours_req, num_volunteers_needed, num_volunteers=0):
+    new_opp = Opportunity(park_id=park_id, name=name, date=date, time=time, hours_req=hours_req, num_volunteers_needed=num_volunteers_needed, num_volunteers=num_volunteers, description=description)
     db.session.add(new_opp)
     try:
         db.session.commit()
@@ -42,7 +42,7 @@ def get_all_opps():
             Park.longitude
         ).join(
             Park, Opportunity.park_id == Park.park_id
-        ).all()
+        ).order_by(Opportunity.opportunity_id).all()
 
         opportunities = [
             {
@@ -121,3 +121,48 @@ def edit_opp(opportunity_id, data):
     except Exception as e:
         db.session.rollback()
         return {'error': f'Failed to update opportunity: {str(e)}'}, 500
+
+def get_parks():
+    try:
+        parks = db.session.query(Park).order_by(Park.park_id).all()
+
+        park_list = [
+            {
+                "id": park.park_id,
+                "name": park.name,
+                "state": park.state,
+                "address": park.address,
+                "phone_number": park.phone_number,
+                "hours": park.hours,
+                "url": park.url,
+                "latitude": park.latitude,
+                "longitude": park.longitude
+            }
+            for park in parks
+        ]
+        return park_list
+    except Exception as e:
+        return {"error": f"Failed to fetch parks: {str(e)}"}
+    
+def create_park(name, state, address, phone_number, hours, url, latitude, longitude):
+    found = db.session.query(Park).filter(Park.name == name).first()
+    if found is not None:
+        return {"error": "Park with that name already exists"}
+    new_park = Park(name=name, state=state, address=address, phone_number=phone_number, hours=hours, url=url, latitude=latitude, longitude=longitude)
+    db.session.add(new_park)
+    try:
+        db.session.commit()
+        return{
+                "id": new_park.park_id,
+                "name": new_park.name,
+                "state": new_park.state,
+                "address": new_park.address,
+                "phone_number": new_park.phone_number,
+                "hours": new_park.hours,
+                "url": new_park.url,
+                "latitude": new_park.latitude,
+                "longitude": new_park.longitude
+                }
+    except Exception as e:
+        db.session.rollback()
+        return {"error": f"Failed to create park: {str(e)}"}
