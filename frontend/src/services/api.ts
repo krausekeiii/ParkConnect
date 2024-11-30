@@ -31,7 +31,7 @@ export const loginUser = async (email: string, password: string) => {
 
 export const getOpportunities = async () => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/opportunities`);
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/opp/opportunities`);
     return response.data;
   } catch (error: any) {
     console.error("Failed to fetch opportunities:", error);
@@ -42,7 +42,7 @@ export const getOpportunities = async () => {
 
 export const addOpportunity = async (opportunity: any) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/opportunities/create`, {
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/opp/create`, {
       park_id: opportunity.park_id, // Ensure the field name matches backend
       name: opportunity.name,
       date: opportunity.date,
@@ -61,7 +61,7 @@ export const addOpportunity = async (opportunity: any) => {
 
 export const deleteOpportunity = async (id: number) => {
   try {
-    await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/opportunities/${id}`);
+    await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/opp/delete/${id}`);
   } catch (error: any) {
     console.error("Failed to delete opportunity:", error);
     throw error;
