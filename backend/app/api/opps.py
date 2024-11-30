@@ -5,11 +5,13 @@ from app.api import opp_bp
 @opp_bp.route('/create', methods=['POST'])
 def create_opp_endpoint():
     data = request.json
+    print("Received payload:", data)  # Log received payload
     try:
-        # Ensure all required fields are provided
-        required_fields = ["park_id", "name", "date", "time", "hours_req", "num_volunteers_needed"]
-        if not all(k in data for k in required_fields):
-            return jsonify({"error": "Please provide all required fields"}), 400
+        required_fields = ["park_id", "name", "date", "time", "description", "hours_req", "num_volunteers_needed"]
+        missing_fields = [k for k in required_fields if k not in data]
+        if missing_fields:
+            print("Missing fields:", missing_fields)  # Log missing fields
+            return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
 
         # Call service function to create a new opportunity
         new_opp = opp_service.create_opp(
@@ -17,20 +19,19 @@ def create_opp_endpoint():
             name=data["name"],
             date=data["date"],
             time=data["time"],
-            description=data.get("description", ""),
+            description=data["description"],
             hours_req=data["hours_req"],
             num_volunteers_needed=data["num_volunteers_needed"],
-            num_volunteers=data.get("num_volunteers", 0),  # Default to 0
+            num_volunteers=0
         )
-
-        return jsonify({
-            "message": "Opportunity created successfully!",
-            "id": new_opp.opportunity_id,
-        }), 201
-
+        db.session.add(new_opp)
+        db.session.commit()
+        return jsonify({"message": "Opportunity created successfully!", "id": new_opp.opportunity_id}), 201
     except Exception as e:
-        print("Error creating opportunity:", e)
-        return jsonify({"error": f"Failed to create opportunity: {str(e)}"}), 500
+        db.session.rollback()
+        print("Error creating opportunity:", e)  # Log detailed error
+        return jsonify({"error": str(e)}), 500
+
 
 # API endpoint to fetch all opportunities
 @opp_bp.route('/opportunities', methods=['GET'])
