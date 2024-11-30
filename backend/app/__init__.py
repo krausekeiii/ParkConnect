@@ -28,7 +28,7 @@ def create_app(config_class=Config):
     
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(vol_bp, url_prefix='/vol')
-    app.register_blueprint(opp_bp, url_prefix='/api')
+    app.register_blueprint(opp_bp, url_prefix='/opp')
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(user_bp, url_prefix='/api/user')
 
