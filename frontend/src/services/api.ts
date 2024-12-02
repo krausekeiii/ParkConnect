@@ -31,10 +31,19 @@ export const loginUser = async (email: string, password: string) => {
 
 export const getOpportunities = async () => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/opp/opportunities`);
-    return response.data;
-  } catch (error: any) {
-    console.error("Failed to fetch opportunities:", error);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/opp/opportunities`);
+    if (response.ok) {
+      const data = await response.json();
+      // Map the backend response to include the volunteersNeeded field
+      return data.map((opp: any) => ({
+        ...opp,
+        volunteersNeeded: opp.volunteers_needed, // Map the backend field
+      }));
+    } else {
+      throw new Error("Failed to fetch opportunities");
+    }
+  } catch (error) {
+    console.error("Error fetching opportunities:", error);
     return [];
   }
 };
@@ -58,14 +67,11 @@ export const addOpportunity = async (opportunity: any) => {
   }
 };
 
-
 export const deleteOpportunity = async (id: number) => {
-  try {
-    await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/opp/delete/${id}`);
-  } catch (error: any) {
-    console.error("Failed to delete opportunity:", error);
-    throw error;
-  }
+  const response = await axios.delete(
+    `${process.env.REACT_APP_BACKEND_URL}/opp/delete/${id}`
+  );
+  return response.data;
 };
 
 // Mock impact tracker API
@@ -103,5 +109,35 @@ export const signupVolunteer = async (name: string, email: string, opp_ID: strin
     return response.data;
   } catch (error: any) {
     return { error: error?.response?.data?.error || 'An error occurred' };
+  }
+};
+
+export const addPark = async (park: any) => {
+  try {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/opp/parks/add`, park);
+      return response.data;
+  } catch (error: any) {
+      console.error("Failed to add park:", error);
+      throw error;
+  }
+};
+
+export const getParks = async () => {
+  try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/opp/parks`);
+      return response.data;
+  } catch (error: any) {
+      console.error("Failed to fetch parks:", error);
+      throw error;
+  }
+};
+
+export const getVolunteerStats = async (parkID: string) => {
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/stats/${parkID}`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to fetch volunteer stats:", error);
+    return { error: "Failed to fetch volunteer stats" };
   }
 };
