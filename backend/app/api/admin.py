@@ -57,10 +57,11 @@ def notify_users():
     parkID = request.json.get('parkID')   # park id
     subject = request.json.get('subject')
     message = request.json.get('message')
-    if not parkID or not message:
-        return jsonify({'error': 'Please provide a parkID and message'}), 400
+    to = request.json.get('to')
+    if not message or not subject or not to:
+        return jsonify({'error': 'Please provide a message, subject, and recipient'}), 400
     
-    result = admin_service.notify_users(parkID, message, subject)
+    result = admin_service.notify_users(message, subject, to)
     if 'error' in result:
         return jsonify(result), 500
     return jsonify(result), 200
