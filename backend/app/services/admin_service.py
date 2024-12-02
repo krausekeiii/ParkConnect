@@ -70,6 +70,60 @@ def get_top3_users(parkID):
     except Exception as e:
         return {'error': f'Failed to get top 3 users: {str(e)}'}
 
+def top_3_user_stats(parkID):
+    users = get_top3_users(parkID)
+    user_info = []
+    try:
+        for user in users:
+            # get total hours user has volunteered at <parkID>
+            total_hours = (
+                    db.session.query(db.func.sum(Opportunity.hours_req))
+                    .select_from(Volunteer)
+                    .join(Opportunity, Volunteer.opportunity_id == Opportunity.opportunity_id)
+                    .filter(
+                        Volunteer.email == user['email'],
+                        Opportunity.park_id == parkID
+                    )
+                    .scalar()
+                )
+            # get total number of opportunities user has volunteered at <parkID>
+            total_opps = (
+                    db.session.query(db.func.count(Opportunity.opportunity_id))
+                    .select_from(Volunteer)
+                    .join(Opportunity, Volunteer.opportunity_id == Opportunity.opportunity_id)
+                    .filter(
+                        Volunteer.email == user['email'],
+                        Opportunity.park_id == parkID
+                    )
+                    .scalar()
+                )
+            # calculate badges earned for users
+            badges = []
+            if total_hours > 100:
+                badges.append("Platinum Volunteer")
+            elif total_hours > 50:
+                badges.append("Gold Volunteer")
+            elif total_hours > 25:
+                badges.append("Silver Volunteer")
+            elif total_hours > 10:
+                badges.append("Bronze Volunteer")
+            if total_opps > 10:
+                badges.append("Opportunity Champion")
+            if total_hours > 100 and total_opps > 10:
+                badges.append("Smokey's Finest")
+
+            # Append user stats to the user_info list
+            user_info.append({
+                "name": user['name'],  # Assuming 'name' is a key in the user object
+                "email": user['email'],
+                "total_hours": total_hours,
+                "total_opps": total_opps,
+                "badges": badges
+            })
+        return user_info
+    except Exception as e:
+        return {'error': f'Failed to get user stats: {str(e)}'}
+    
 def get_top_opportunites(parkID):
     # get top 3 opportunities by number of volunteers
     try:
@@ -79,13 +133,21 @@ def get_top_opportunites(parkID):
     except Exception as e:
         return {'error': f'Failed to get top 3 opportunities: {str(e)}'}
 
-def get_total_hours(parkID):
-    # get total hours that users have volunteered at a parkID
+def get_total_hours_by_month(parkID):
+    # get total hours volunteered by month for parkID for past 6 months
     try:
-        hours_vold = db.session.query(db.func.sum(Opportunity.hours_req * Opportunity.num_volunteers)).filter(Opportunity.park_id == parkID).scalar()
-        return hours_vold
+        hours = db.session.query(
+            db.func.extract('month', Opportunity.date),
+            db.func.sum(Opportunity.hours_req)
+        ).filter(
+            Opportunity.park_id == parkID,
+            Opportunity.date >= db.func.current_date() - db.text("INTERVAL '6 months'")
+        ).group_by(
+            db.func.extract('month', Opportunity.date)
+        ).all()
+        return {'hours': [{'month': hour[0], 'hours': hour[1]} for hour in hours]}
     except Exception as e:
-        return {'error': f'Failed to get total hours: {str(e)}'}
+        return {'error': f'Failed to get total hours by month: {str(e)}'}
 
 def notify_users(parkID, message, subject):
     # get all users who have volunteered at parkID

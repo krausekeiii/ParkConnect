@@ -37,20 +37,16 @@ def get_stats(parkID):
     if not parkID:
         return jsonify({'error': 'Please provide a park ID'}), 400
 
-    users = admin_service.get_top3_users(parkID)
-    opps = admin_service.get_top_opportunites(parkID)
-    hours = admin_service.get_total_hours(parkID)
+    users = admin_service.top_3_user_stats(parkID)
+    hours = admin_service.get_total_hours_by_month(parkID)
 
     if 'error' in users:
         return jsonify(users), 500
-    if 'error' in opps:
-        return jsonify(opps), 500
-    if type(hours) not in [int]:
+    if 'error' in hours:
         return jsonify(hours), 500
     
     result = {
         'top3Users': users,
-        'top3Opportunities': opps,
         'totalHours': hours
     }
     return jsonify(result), 200
