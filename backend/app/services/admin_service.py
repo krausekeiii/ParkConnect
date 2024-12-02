@@ -193,3 +193,17 @@ def notify_users(parkID, message, subject):
     except Exception as e:
         print(f"Error: {e}")
         return {'error': f'Failed to send email: {str(e)}'}
+    
+def get_opps(parkID):
+    # get all opportunities for parkID
+    try:
+        opps = db.session.query(Opportunity).filter(Opportunity.park_id == parkID).all()
+        return [{
+                'opportunity_id': opp.opportunity_id, 'park_id': opp.park_id, 'name': opp.name,\
+                'date': opp.date.strftime("%Y-%m-%d") if opp.date else None,\
+                'time': opp.time.strftime("%H:%M:%S") if opp.time else None,\
+                'description': opp.description, 'hours_req': opp.hours_req, \
+                'volunteers_signed_up': opp.num_volunteers, 'volunteers_needed': opp.num_volunteers_needed
+            } for opp in opps]
+    except Exception as e:
+        return {'error': f'Failed to get opportunities: {str(e)}'}

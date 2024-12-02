@@ -64,3 +64,14 @@ def notify_users():
     if 'error' in result:
         return jsonify(result), 500
     return jsonify(result), 200
+
+# json request: GET, parkID = park id
+@admin_bp.route('/opps/<int:parkID>', methods=['GET'])
+def get_opps(parkID):
+    if not parkID:
+        return jsonify({'error': 'Please provide a park ID'}), 400
+
+    result = admin_service.get_opps(parkID)
+    if 'error' in result:
+        return jsonify(result), 500
+    return jsonify(result), 200
