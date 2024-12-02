@@ -2,6 +2,10 @@ from app.models import User, Opportunity, Volunteer, Admin, Park
 from app import db
 import dotenv
 import os
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 
 def jsonadmin(admin):
     return {
@@ -161,16 +165,8 @@ def get_total_hours_by_month(parkID):
     except Exception as e:
         return {'error': f'Failed to get total hours by month: {str(e)}'}
 
-def notify_users(parkID, message, subject):
-    # get all users who have volunteered at parkID
+def notify_users(message, subject, to):
     try:
-        # gets email of anyone who's ever volunteerd at parkID
-        emails = [user['email'] for user in get_top3_users(parkID)]
-        park = db.session.query(Park.name).filter(Park.park_id == parkID).first()
-        import smtplib
-        from email.mime.text import MIMEText
-        from email.mime.multipart import MIMEMultipart
-
         dotenv.load_dotenv()
         EMAIL_ID = os.getenv('EMAIL_ID')
         EMAIL_P = os.getenv('EMAIL_P')
@@ -179,17 +175,16 @@ def notify_users(parkID, message, subject):
         msg = MIMEMultipart()
         msg['From'] = EMAIL_ID
         msg['Subject'] = subject
-        
-        for receiver_email in emails:
-            msg['To'] = receiver_email
-            msg.attach(MIMEText(message, 'plain'))
-            # Send the email
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
-                server.starttls()  # Secure connection
-                server.login(EMAIL_ID, EMAIL_P)
-                server.sendmail(EMAIL_ID, receiver_email, msg.as_string())
-            print(f"Email sent successfully to {receiver_email}!")
-        return {'message': f'Email sent to all users who have volunteered at {park.name}'}
+        msg['To'] = to
+
+        msg.attach(MIMEText(message, 'plain'))
+        # Send the email
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()  # Secure connection
+            server.login(EMAIL_ID, EMAIL_P)
+            server.sendmail(EMAIL_ID, to, msg.as_string())
+        print(f"Email sent successfully to {to}, with body {msg.as_string}")
+        return {'message': f'Email sent to {to}'}
     except Exception as e:
         print(f"Error: {e}")
         return {'error': f'Failed to send email: {str(e)}'}
