@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from app.services import user_service, opp_service
+from app.services import user_service, opp_service, parkconnect_service
 from app.api import vol_bp
 
 # Fetch available opportunities
@@ -49,3 +49,22 @@ def unreg_vol():
         return jsonify(unreg_vol), 400
 
     return unreg_vol
+
+@vol_bp.route('/impact', methods=['GET'])
+def get_impact():
+    total_hours = parkconnect_service.get_total_hours()
+    total_vols = parkconnect_service.get_total_vols()
+    total_projects = parkconnect_service.get_total_projects()
+    top_parks = parkconnect_service.get_top_parks()
+    milestones = parkconnect_service.get_milestones()
+
+    if 'error' in [total_hours, total_vols, total_projects, top_parks, milestones]:
+        return jsonify(total_hours), 500
+    
+    return jsonify({
+        'total_hours': total_hours,
+        'total_vols': total_vols,
+        'total_projects': total_projects,
+        'top_parks' : top_parks,
+        'milestones': milestones
+    }), 200

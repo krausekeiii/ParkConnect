@@ -32,4 +32,6 @@ CREATE TABLE public.opportunities (
     num_volunteers INTEGER NOT NULL,
     num_volunteers_needed INTEGER NOT NULL
 );
+
+trigger relates this table to volunteers, triggering deleting of all volunteers associated with the opportunity deleted
 '''
