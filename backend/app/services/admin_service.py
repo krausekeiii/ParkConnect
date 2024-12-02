@@ -183,7 +183,7 @@ def notify_users(message, subject, to):
             server.starttls()  # Secure connection
             server.login(EMAIL_ID, EMAIL_P)
             server.sendmail(EMAIL_ID, to, msg.as_string())
-        print(f"Email sent successfully to {to}, with body {msg.as_string}")
+        print(f"Email sent successfully to {to}, with body {message}")
         return {'message': f'Email sent to {to}'}
     except Exception as e:
         print(f"Error: {e}")

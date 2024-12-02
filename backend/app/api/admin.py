@@ -58,7 +58,7 @@ def notify_users():
     subject = request.json.get('subject')
     message = request.json.get('message')
     to = request.json.get('to')
-    if not parkID or not message or not subject or not to:
+    if not message or not subject or not to:
         return jsonify({'error': 'Please provide a message, subject, and recipient'}), 400
     
     result = admin_service.notify_users(message, subject, to)
