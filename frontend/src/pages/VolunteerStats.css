@@ -1,24 +1,46 @@
 .volunteer-stats {
-    padding: 40px;
-    text-align: center;
-  }
-  
-  table {
-    width: 100%;
-    margin: 20px 0;
-    border-collapse: collapse;
-  }
-  
-  table th, table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-  }
-  
-  .chart-container {
-    margin-top: 30px;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
+  padding: 20px;
+}
+
+.volunteer-table-wrapper {
+  overflow-x: auto;
+}
+
+.volunteer-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.volunteer-table th,
+.volunteer-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.volunteer-table th {
+  background-color: #87A878;
+  color: white;
+}
+
+.volunteer-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.volunteer-table tr:hover {
+  background-color: #c8e3d4;
+}
+
+.chart-container {
+  margin-top: 30px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.badge-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
