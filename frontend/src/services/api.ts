@@ -141,3 +141,31 @@ export const getVolunteerStats = async (parkID: string) => {
     return { error: "Failed to fetch volunteer stats" };
   }
 };
+
+export const sendNotification = async (payload: {
+  parkID: number;
+  subject: string;
+  message: string;
+  to?: string; // Optional field for sending to a specific user
+}) => {
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/admin/notify`,
+      payload
+    );
+    return response;
+  } catch (err) {
+    console.error('API Error - sendNotification:', err);
+    throw err;
+  }
+};
+
+export const getParkVolunteers = async (parkID: number) => {
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/volunteers/${parkID}`);
+    return response.data; // Backend should return an array of volunteer objects
+  } catch (error) {
+    console.error('Failed to fetch park volunteers:', error);
+    throw error; // Let the frontend handle errors gracefully
+  }
+};
