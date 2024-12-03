@@ -45,6 +45,7 @@ def list_users():
     
     return jsonify(serialized_users), 200
 
+# edit user
 @user_bp.route('/<int:user_id>', methods=['PUT'])
 def edit_user(user_id):
     from app.models.user import User  # Import the User model
@@ -67,6 +68,7 @@ def edit_user(user_id):
         db.session.rollback()
         return jsonify({'error': f'Failed to update user: {str(e)}'}), 500
 
+# delete user
 @user_bp.route('/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     from app.models.user import User  # Import the User model
@@ -83,3 +85,14 @@ def delete_user(user_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': f'Failed to delete user: {str(e)}'}), 500
+
+# get opportunities a user has signed up for
+@user_bp.route('/opps', methods=['GET'])
+def get_opps():
+    email = request.args.get('email')
+    if not email:
+        return jsonify({'error': 'Please provide a user email'}), 400
+    opps = user_service.get_opps_vold(email)
+    if 'error' in opps:
+        return jsonify(opps), 500
+    return jsonify(opps), 200
