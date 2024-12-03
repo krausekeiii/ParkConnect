@@ -168,3 +168,15 @@ def get_top_parks(userEmail):
         .limit(3)
     
     return query.all()
+
+def get_opps_vold(userEmail):
+    try: 
+        # get name, date, and hours_req for all opportunities user has volunteered for
+        query = db.session.query(Opportunity.name.label('opp_name'), Opportunity.date, Opportunity.hours_req, Park.name.label('park_name'))\
+            .join(Volunteer, Volunteer.opportunity_id == Opportunity.opportunity_id)\
+            .join(Park, Park.park_id == Opportunity.park_id)\
+            .filter(Volunteer.email == userEmail)
+        
+        return [{'name': opp.opp_name, 'park':opp.park_name, 'date': opp.date, 'hours_req': opp.hours_req} for opp in query.all()]
+    except Exception as e:
+        return {'error': f'Failed to get volunteer count: {str(e)}'}
