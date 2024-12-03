@@ -27,9 +27,9 @@ CREATE TABLE parks.parks (
     state CHAR(2) NOT NULL,
     address VARCHAR(80) NOT NULL,
     phone_number CHAR(10) NOT NULL,
-    email VARCHAR(120) NOT NULL,
     hours VARCHAR(80),
-    description VARCHAR(200),
-    url VARCHAR(120)
+    url VARCHAR(120),
+    latitude FLOAT NOT NULL,
+    longitude FLOAT NOT NULL
 );
 '''

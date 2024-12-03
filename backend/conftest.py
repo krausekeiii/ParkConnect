@@ -10,12 +10,12 @@ def app():
     yield app
     with app.app_context():
         db.session.remove()
-        db.drop_all()  # Drop the test database
 
 @pytest.fixture
-def client():
+def client(app):
     return app.test_client()
 
 @pytest.fixture
-def runner():
+def runner(app):
     return app.test_cli_runner()
+

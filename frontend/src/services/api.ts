@@ -95,7 +95,7 @@ export const trackGetInvolved = async () => {
 
 export const signupVolunteer = async (name: string, email: string, opp_ID: string, info: string) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/volunteer/signup`, {
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/vol/signup`, {
       name, // Add the name field
       email,
       opp_ID,
@@ -168,7 +168,7 @@ export const getParkVolunteers = async (parkID: number) => {
 // Fetch total number of volunteers
 export const getTotalVolunteers = async () => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/volunteers`);
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/vol`);
     return response.data; // Assuming the backend returns the count of volunteers
   } catch (error: any) {
     console.error('Failed to fetch total volunteers:', error);

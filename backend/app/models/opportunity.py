@@ -34,4 +34,17 @@ CREATE TABLE public.opportunities (
 );
 
 trigger relates this table to volunteers, triggering deleting of all volunteers associated with the opportunity deleted
+CREATE OR REPLACE FUNCTION delete_volunteers_for_opportunity() 
+RETURNS TRIGGER AS $$
+BEGIN
+    DELETE FROM vols.volunteers
+    WHERE opportunity_ID = OLD.opportunity_ID;
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_delete_volunteers
+AFTER DELETE ON opps.opportunities
+FOR EACH ROW
+EXECUTE FUNCTION delete_volunteers_for_opportunity();
 '''
