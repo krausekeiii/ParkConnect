@@ -1,7 +1,4 @@
-from app.models.user import User
-from app.models.vols import Volunteer
-from app.models.opportunity import Opportunity
-from app.models.parks import Park
+from app.models import User, Volunteer, Opportunity, Park, Admin
 from app import db
 from flask import jsonify
 
@@ -180,3 +177,12 @@ def get_opps_vold(userEmail):
         return [{'name': opp.opp_name, 'park':opp.park_name, 'date': opp.date, 'hours_req': opp.hours_req} for opp in query.all()]
     except Exception as e:
         return {'error': f'Failed to get volunteer count: {str(e)}'}
+
+def get_admin_park(userEmail):
+    # Assmuption: user can only be admin for one park... must change in production
+    # Query admin on useremail, return first park_id
+    try:
+        query = db.session.query(Admin.park_id).where(Admin.email == userEmail)
+        return {'park_id':query.first()[0]}
+    except Exception as e:
+        return {'error': f'Failed to get admin park: {str(e)}'}
