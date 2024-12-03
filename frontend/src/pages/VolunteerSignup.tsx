@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import './VolunteerSignup.css';
-import { signupVolunteer, getOpportunities } from '../services/api';
+import { signupVolunteer, getOpportunities, getParks } from '../services/api';
 
 const VolunteerSignup: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [opportunityId, setOpportunityId] = useState('');
-  const [info, setInfo] = useState(''); // Add this line
-  const [opportunities, setOpportunities] = useState([]);
+  const [info, setInfo] = useState(''); // Additional information
+  const [opportunities, setOpportunities] = useState<any[]>([]);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    // Fetch opportunities on component load
     const fetchOpportunities = async () => {
       try {
-        const data = await getOpportunities();
-        setOpportunities(data);
+        const opportunitiesData = await getOpportunities();
+        const parksData = await getParks(); // Fetch all parks
+
+        // Map parks to opportunities using park_id
+        const opportunitiesWithParks = opportunitiesData.map((opp: any) => {
+          const park = parksData.find((p: any) => p.id === opp.park_id);
+          return {
+            ...opp,
+            parkName: park ? park.name : 'Unknown Park',
+          };
+        });
+
+        setOpportunities(opportunitiesWithParks);
       } catch (error) {
         console.error('Error fetching opportunities:', error);
       }
@@ -30,6 +40,7 @@ const VolunteerSignup: React.FC = () => {
       const response: any = await signupVolunteer(name, email, opportunityId, info); // Use "info" here
       setMessage(response.message || 'Signup successful!');
     } catch (error) {
+      console.error('Signup error:', error);
       setMessage('An error occurred while signing up.');
     }
   };
@@ -57,7 +68,7 @@ const VolunteerSignup: React.FC = () => {
             <option value="">Select an opportunity</option>
             {opportunities.map((opportunity: any) => (
               <option key={opportunity.id} value={opportunity.id}>
-                {opportunity.name}
+                {`${opportunity.name}, ${opportunity.parkName}, ${opportunity.date || 'No Date'}`}
               </option>
             ))}
           </select>
