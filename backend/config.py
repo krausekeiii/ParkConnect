@@ -16,7 +16,5 @@ class Config:
 class TestConfig(Config):
         """Test configuration."""
         TESTING = True
-        SQLALCHEMY_BINDS={
-                'user_db': os.getenv('TEST_DATABASE_URL')  # Test database
-        }
+        SQLALCHEMY_DATABASE_URI= os.getenv('TEST_DATABASE_URL')  # Test database
         # Add other test configurations
