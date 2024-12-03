@@ -222,3 +222,29 @@ export const getMilestonesAndImpact = async () => {
     }, 500);
   });
 };
+
+// Fetch all users
+export const getAllUsers = async () => {
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/user/list`);
+    return response.data; // Assuming the backend returns a list of users
+  } catch (error: any) {
+    console.error('Failed to fetch users:', error);
+    throw error;
+  }
+};
+
+export const getUserProfile = async (email: string) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/stats/${email}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch user profile: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error in getUserProfile:', error);
+    throw error; // Rethrow to let the frontend handle it
+  }
+};
+

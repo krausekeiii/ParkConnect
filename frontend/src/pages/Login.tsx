@@ -12,21 +12,28 @@ const Login: React.FC<{ setIsAuthenticated: (value: boolean) => void; setUserNam
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-  
+    
     try {
       const response = await loginUser(email, password);
       if (response.error) {
         setError(response.error);
       } else {
+        // Save user email to localStorage
+        localStorage.setItem('userEmail', email);
+  
+        // Update authentication state and user info
         setIsAuthenticated(true);
         setUserName(response.name); // Set the userName from the response
         setUserRole(response.role); // Set the user role
-        navigate(response.role === 'admin' ? '/admin-dashboard' : '/'); // Redirect based on role
+  
+        // Redirect based on role
+        navigate(response.role === 'admin' ? '/admin-dashboard' : '/');
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again later.');
     }
   };
+  
 
   return (
     <div className="login-container">
