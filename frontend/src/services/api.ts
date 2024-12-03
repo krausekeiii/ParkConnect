@@ -74,18 +74,14 @@ export const deleteOpportunity = async (id: number) => {
   return response.data;
 };
 
-// Mock impact tracker API
-export const getImpactData = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        totalHours: 120,
-        numberOfVolunteers: 50,
-        projectsCompleted: 10,
-        topParks: ["Yellowstone", "Yosemite"],
-      });
-    }, 500);
-  });
+export const getImpactData = async (parkID: string) => {
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/stats/${parkID}`);
+    return response.data; // Assuming the backend returns the stats in the expected format
+  } catch (error: any) {
+    console.error('Failed to fetch impact tracker data:', error);
+    throw error;
+  }
 };
 
 // Mock API for tracking user interest in getting involved
@@ -97,7 +93,6 @@ export const trackGetInvolved = async () => {
   });
 };
 
-// Volunteer signup
 export const signupVolunteer = async (name: string, email: string, opp_ID: string, info: string) => {
   try {
     const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/volunteer/signup`, {
@@ -168,4 +163,62 @@ export const getParkVolunteers = async (parkID: number) => {
     console.error('Failed to fetch park volunteers:', error);
     throw error; // Let the frontend handle errors gracefully
   }
+};
+
+// Fetch total number of volunteers
+export const getTotalVolunteers = async () => {
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/volunteers`);
+    return response.data; // Assuming the backend returns the count of volunteers
+  } catch (error: any) {
+    console.error('Failed to fetch total volunteers:', error);
+    throw error;
+  }
+};
+
+// Fetch top parks (based on volunteer needs or other criteria)
+export const getTopParks = async () => {
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/opportunities`);
+    const opportunities = response.data;
+
+    // Aggregate park data based on volunteer needs or counts
+    const parkCounts: Record<string, number> = {};
+    opportunities.forEach((opportunity: any) => {
+      const parkName = opportunity.parkName || 'Unknown Park';
+      parkCounts[parkName] = (parkCounts[parkName] || 0) + opportunity.volunteersNeeded;
+    });
+
+    // Sort parks by volunteer needs and return the top 3
+    const sortedParks = Object.entries(parkCounts)
+      .sort(([, countA], [, countB]) => countB - countA)
+      .slice(0, 3)
+      .map(([parkName]) => parkName);
+
+    return sortedParks;
+  } catch (error: any) {
+    console.error('Failed to fetch top parks:', error);
+    throw error;
+  }
+};
+
+// Mock API for milestones and environmental impact
+export const getMilestonesAndImpact = async () => {
+  // Replace this with real backend data when available
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        milestones: [
+          { name: '100+ Hours Club', value: 12 },
+          { name: 'Most Active Park', value: 'Yellowstone' },
+          { name: 'Highest Growth', value: 'Trail Maintenance' },
+        ],
+        environmentalImpact: [
+          { name: 'Trees Planted', value: 156 },
+          { name: 'Trails Maintained', value: '45 Miles' },
+          { name: 'Waste Collected', value: '2,300 lbs' },
+        ],
+      });
+    }, 500);
+  });
 };
