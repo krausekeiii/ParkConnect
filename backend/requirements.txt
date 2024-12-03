@@ -6,3 +6,4 @@ flask-sqlalchemy
 conda-forge::python-dotenv
 psycopg2
 flask-cors
+pytest

@@ -96,3 +96,14 @@ def get_opps():
     if 'error' in opps:
         return jsonify(opps), 500
     return jsonify(opps), 200
+
+# get park user is admin for based on user email, right now only assume it is 1 park
+@user_bp.route('/adminpark', methods=['GET'])
+def get_admin_park():
+    email = request.args.get('email')
+    if not email:
+        return jsonify({'error': 'Please provide a user email'}), 400
+    park = user_service.get_admin_park(email)
+    if 'error' in park:
+        return jsonify(park), 500
+    return jsonify(park), 200
