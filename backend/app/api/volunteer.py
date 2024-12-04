@@ -7,6 +7,8 @@ from app.api import vol_bp
 def get_opportunities():
     opportunities = opp_service.get_all_opps()  # Use the service function
     # Return a serialized version of the opportunities
+    if 'error' in opportunities:
+        return jsonify(opportunities), 500
     serialized_opportunities = [
         {
             'id': opp.opportunity_ID,
@@ -32,7 +34,7 @@ def volunteer_signup():
     # Use the user service to register the volunteer
     new_vol = user_service.register_volunteer(email, opp_ID)
     if 'error' in new_vol:
-        return jsonify(new_vol), 400
+        return jsonify(new_vol), 500
 
     return jsonify({'message': f'Successfully signed up for opportunity ID {opp_ID}!'}), 201
 
@@ -46,7 +48,7 @@ def unreg_vol():
 
     unreg_vol = user_service.unregister_vol(email, opp_ID)
     if 'error' in unreg_vol:
-        return jsonify(unreg_vol), 400
+        return jsonify(unreg_vol), 500
 
     return unreg_vol
 
