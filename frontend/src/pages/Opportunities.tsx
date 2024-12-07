@@ -98,9 +98,13 @@ const Opportunities: React.FC = () => {
   };
 
   const handleOpportunityClick = (opportunity: Opportunity) => {
-    setSelectedOpportunity(opportunity);
+    setSelectedOpportunity({
+      ...opportunity,
+      num_volunteers: opportunity.num_volunteers ?? 'No data available', // Default for signed-up volunteers
+      volunteersNeeded: opportunity.volunteersNeeded ?? 'No data available', // Default for volunteers needed
+    });
   };
-
+  
   const closeModal = () => {
     setSelectedOpportunity(null);
   };
@@ -140,7 +144,10 @@ const Opportunities: React.FC = () => {
             <strong>Date:</strong> {new Date(selectedOpportunity.date).toLocaleDateString()}
           </p>
           <p>
-            <strong>Volunteers:</strong> {selectedOpportunity.num_volunteers}
+            <strong>Volunteers Signed Up:</strong> {selectedOpportunity.num_volunteers ?? 'No data available'}
+          </p>
+          <p>
+            <strong>Volunteers Needed:</strong> {selectedOpportunity.volunteersNeeded ?? 'No data available'}
           </p>
         </Modal>
       )}

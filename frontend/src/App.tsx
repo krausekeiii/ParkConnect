@@ -19,17 +19,12 @@ function App() {
   const [userName, setUserName] = useState('');
   const [userRole, setUserRole] = useState('');
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setUserName('');
-    setUserRole('');
-  };
-
   return (
     <Router>
       <Header 
         isAuthenticated={isAuthenticated} 
-        handleLogout={handleLogout} 
+        setIsAuthenticated={setIsAuthenticated} 
+        setUserName={setUserName}
         userName={userName} 
         userRole={userRole} 
       />
@@ -40,7 +35,10 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/impact-tracker" element={<ImpactTracker />} />
-          <Route path="/volunteer-signup" element={<VolunteerSignup />} />
+          <Route 
+            path="/volunteer-signup" 
+            element={<VolunteerSignup isAuthenticated={isAuthenticated} />} // Pass isAuthenticated prop
+          />
           <Route 
             path="/login" 
             element={<Login setIsAuthenticated={setIsAuthenticated} setUserName={setUserName} setUserRole={setUserRole} />} 

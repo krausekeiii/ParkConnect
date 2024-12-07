@@ -48,7 +48,6 @@ export const getOpportunities = async () => {
   }
 };
 
-
 export const addOpportunity = async (opportunity: any) => {
   try {
     const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/opp/create`, {
@@ -73,6 +72,20 @@ export const deleteOpportunity = async (id: number) => {
   );
   return response.data;
 };
+
+export const updateOpportunity = async (opportunity: any) => {
+  try {
+    const response = await axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}/opp/edit/${opportunity.id}`,
+      opportunity
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to update opportunity:", error);
+    throw error;
+  }
+};
+
 
 export const getImpactData = async (parkID: string) => {
   try {

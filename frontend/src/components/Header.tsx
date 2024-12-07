@@ -4,16 +4,22 @@ import './Header.css';
 
 interface HeaderProps {
   isAuthenticated: boolean;
-  handleLogout: () => void;
+  setIsAuthenticated: (value: boolean) => void;
+  setUserName: (name: string) => void;
   userName: string;
   userRole: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ isAuthenticated, handleLogout, userName, userRole }) => {
+const Header: React.FC<HeaderProps> = ({ isAuthenticated, setIsAuthenticated, setUserName, userName, userRole }) => {
   const navigate = useNavigate();
 
   const handleLogoutClick = () => {
-    handleLogout();
+    // Clear local storage and reset authentication state
+    localStorage.removeItem('userEmail'); // Clear stored email
+    localStorage.removeItem('isAuthenticated'); // Clear authentication state
+    setIsAuthenticated(false); // Update state to reflect logged-out status
+    setUserName(''); // Clear user name state
+
     navigate('/'); // Redirect to Home after logout
   };
 
@@ -43,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, handleLogout, userName
           ) : (
             <>
               <button onClick={handleLoginNav} className="btn login-btn">Login</button>
-              <button onClick={handleSignupNav} className="btn signup-btn">Signup</button>
+              <button onClick={handleSignupNav} className="btn signup-btn">Register</button>
             </>
           )}
         </div>

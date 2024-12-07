@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './ManageOpportunities.css';
 import Modal from '../components/Modal';
 import axios from 'axios';
-import { getOpportunities, addOpportunity, deleteOpportunity, addPark, getParks } from '../services/api';
+import { getOpportunities, addOpportunity, deleteOpportunity, updateOpportunity, addPark, getParks } from '../services/api';
 
 interface Opportunity {
   id: number;
@@ -93,42 +93,74 @@ const ManageOpportunities: React.FC = () => {
 
   const handleParkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewPark((prev) => ({ ...prev, [name]: value }));
-  };
+    setNewPark((prev) => ({
+        ...prev,
+        [name]: name === 'latitude' || name === 'longitude' ? parseFloat(value) || '' : value,
+    }));
+};
 
-  const handleSaveOpportunity = async () => {
-    try {
-      const park = parks.find((park) => park.name === selectedOpportunity.park_name);
-      if (!park || !park.id) {
-        alert('Please select a valid park.');
-        return;
-      }
-  
-      const payload: Opportunity = {
-        ...selectedOpportunity,
-        park_id: park.id, 
-      };
-  
-      await addOpportunity(payload);
-      setIsOpportunityModalOpen(false);
-      setOpportunities((prev) => [...prev, payload]); 
-    } catch (error) {
-      console.error('Error saving opportunity:', error);
-      alert('Failed to save opportunity. Please try again.');
+const handleSaveOpportunity = async () => {
+  try {
+    const park = parks.find((park) => park.name === selectedOpportunity.park_name);
+    if (!park || !park.id) {
+      alert('Please select a valid park.');
+      return;
     }
-  };
+
+    const payload: Opportunity = {
+      ...selectedOpportunity,
+      park_id: park.id, 
+    };
+
+    // If the opportunity has an ID, it's an edit; otherwise, it's new
+    if (selectedOpportunity.id) {
+      await updateOpportunity(payload); // Use an "updateOpportunity" API function
+      setOpportunities((prev) =>
+        prev.map((opp) => (opp.id === payload.id ? { ...payload } : opp))
+      );
+    } else {
+      const newOpportunity = await addOpportunity(payload);
+      setOpportunities((prev) => [...prev, newOpportunity]);
+    }
+
+    setIsOpportunityModalOpen(false);
+  } catch (error) {
+    console.error('Error saving opportunity:', error);
+    alert('Failed to save opportunity. Please try again.');
+  }
+};
+
   
 
   const handleSavePark = async () => {
+    if (!newPark.name || !newPark.latitude || !newPark.longitude) {
+      alert('Please fill out all required fields: name, latitude, and longitude.');
+      return;
+    }
+  
+    const minimalPayload = {
+      name: newPark.name,
+      latitude: parseFloat(newPark.latitude),
+      longitude: parseFloat(newPark.longitude),
+    };
+  
+    console.log("Payload for adding park (minimal):", minimalPayload);
+  
     try {
-      await addPark(newPark);
-      setIsParkModalOpen(false);
+      const response = await addPark(minimalPayload);
       alert('Park added successfully!');
+  
+      // Fetch updated parks list
+      const updatedParks = await getParks();
+      setParks(updatedParks);
+  
+      // Close the modal
+      setIsParkModalOpen(false);
     } catch (error) {
       console.error('Error adding park:', error);
       alert('Failed to add park. Please try again.');
     }
-  };
+  };  
 
   const handleDeleteOpportunity = async (id: number) => {
     if (window.confirm('Are you sure you want to delete this opportunity?')) {
