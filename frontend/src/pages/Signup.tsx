@@ -16,26 +16,29 @@ const Signup: React.FC<{ setIsAuthenticated: (value: boolean) => void, setUserNa
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
+  
     if (password !== confirmPassword) {
       setError('Passwords do not match!');
       return;
     }
-
+  
     try {
-      // Ensure `userName` is sent as camel case
       const response = await signupUser(userName, email, password, name, description);
       if (response.error) {
         setError(response.error);
       } else {
         setIsAuthenticated(true);
         setUserName(name);
+  
+        // Store user email in localStorage for session consistency
+        localStorage.setItem('userEmail', email);
+  
         navigate('/', { state: { successMessage: 'Signup was successful!' } });
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again later.');
     }
-  };
+  };  
 
   return (
     <div className="signup-container">
