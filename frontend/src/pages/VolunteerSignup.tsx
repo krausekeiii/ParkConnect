@@ -57,11 +57,21 @@ const VolunteerSignup: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticat
 
   if (!isAuthenticated) {
     return (
-      <div className="signup-page">
-        <h1>Volunteer Signup</h1>
-        <p>You need to register or log in before signing up for an opportunity.</p>
-        <button onClick={() => navigate('/signup')} className="btn">Register</button>
-        <button onClick={() => navigate('/login')} className="btn">Log In</button>
+      <div className="unauthenticated-page">
+        <div className="unauthenticated-container">
+          <h1 className="unauthenticated-header">Join Our Volunteer Community</h1>
+          <p className="unauthenticated-text">
+            Register or log in to explore opportunities and contribute to preserving our national parks.
+          </p>
+          <div className="unauthenticated-buttons">
+            <button onClick={() => navigate('/signup')} className="btn primary-btn">
+              Register
+            </button>
+            <button onClick={() => navigate('/login')} className="btn secondary-btn">
+              Log In
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
