@@ -4,14 +4,15 @@ import { signupVolunteer, getOpportunities, getParks } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 const VolunteerSignup: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState(localStorage.getItem('userName') || '');
+  const [email, setEmail] = useState(localStorage.getItem('userEmail') || '');
   const [opportunityId, setOpportunityId] = useState('');
   const [info, setInfo] = useState('');
   const [opportunities, setOpportunities] = useState<any[]>([]);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  
   useEffect(() => {
     const fetchOpportunities = async () => {
       try {
@@ -33,10 +34,14 @@ const VolunteerSignup: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticat
     };
 
     fetchOpportunities();
+
+    
   }, []);
 
   const handleVolunteerSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+
     try {
       const response: any = await signupVolunteer(name, email, opportunityId, info);
       if (response.error) {
@@ -66,14 +71,7 @@ const VolunteerSignup: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticat
       <h1>Volunteer Signup</h1>
       {message && <div className="message">{message}</div>}
       <form className="signup-form" onSubmit={handleVolunteerSignup}>
-        <label>
-          Name:
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-        </label>
-        <label>
-          Email:
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </label>
+        
         <label>
           Select Opportunity:
           <select

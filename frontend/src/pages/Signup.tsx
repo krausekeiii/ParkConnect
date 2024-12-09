@@ -32,6 +32,7 @@ const Signup: React.FC<{ setIsAuthenticated: (value: boolean) => void, setUserNa
   
         // Store user email in localStorage for session consistency
         localStorage.setItem('userEmail', email);
+        localStorage.setItem('userName', email);
   
         navigate('/', { state: { successMessage: 'Signup was successful!' } });
       }

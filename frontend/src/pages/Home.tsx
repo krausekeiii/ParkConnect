@@ -1,7 +1,7 @@
 import React from 'react';
 import './Home.css';
 import volunteersImage from '../assets/volunteers-homepage.jpg';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const location = useLocation();
@@ -43,7 +43,7 @@ const Home: React.FC = () => {
       <p className="home-text">
         Become part of the National Park Service's volunteer community, whether for a day or a year. Help protect America's treasured sites.
       </p>
-      <a className="home-button" href="/volunteer-signup">Get Involved</a>
+      <Link className="home-button" to="/volunteer-signup">Get Involved</Link>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './SendNotifications.css';
-import { sendNotification, getVolunteerStats } from '../services/api';
+import { sendNotification, getVolunteerStats, getAllUsers } from '../services/api';
 
 const SendNotifications: React.FC = () => {
   const [message, setMessage] = useState('');
@@ -14,10 +14,10 @@ const SendNotifications: React.FC = () => {
     const fetchVolunteers = async () => {
       try {
         const parkID = 1; // Replace with the actual parkID
-        const stats = await getVolunteerStats(parkID.toString()); // Convert parkID to string
+        const stats = await getAllUsers(); // Convert parkID to string
 
-        if (stats && stats.top3Users) {
-          setVolunteers(stats.top3Users); // Populate volunteers from top3Users
+        if (stats) {
+          setVolunteers(stats); // Populate volunteers from top3Users
         } else {
           setVolunteers([]);
           setErrorMessage('No volunteers found.');

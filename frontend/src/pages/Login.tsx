@@ -20,6 +20,7 @@ const Login: React.FC<{ setIsAuthenticated: (value: boolean) => void; setUserNam
       } else {
         // Save user email to localStorage
         localStorage.setItem('userEmail', email);
+        localStorage.setItem('userName', response.name);
   
         // Update authentication state and user info
         setIsAuthenticated(true);
