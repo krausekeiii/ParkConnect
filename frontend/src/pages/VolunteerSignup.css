@@ -173,7 +173,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(to bottom, #f0f4f8, #d9e8f5);
+  background: linear-gradient(135deg, #f5f5f5, #dcd0c0);
   font-family: 'Arial', sans-serif;
 }
 
